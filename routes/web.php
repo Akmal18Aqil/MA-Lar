@@ -41,6 +41,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/mahasantri', [\App\Http\Controllers\MahasantriController::class, 'index'])->name('mahasantri.index');
     Route::get('/mahasantri/create', [\App\Http\Controllers\MahasantriController::class, 'create'])->name('mahasantri.create');
+    Route::post('/admin/mahasantri', [\App\Http\Controllers\MahasantriController::class, 'store'])->name('admin.mahasantri.store');
 });
 
 Route::middleware('auth')->group(function () {

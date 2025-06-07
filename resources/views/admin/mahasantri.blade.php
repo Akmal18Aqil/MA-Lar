@@ -9,69 +9,74 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form class="space-y-6">
-                        <div>
-                            <label for="nim" class="block text-sm font-medium text-gray-700">NIM</label>
-                            <div class="mt-1">
-                                <input type="text" name="nim" id="nim" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                    <div class="section-body">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-10 col-lg-8">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h4 class="mb-0">Tambah Mahasantri</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="POST" action="{{ route('admin.mahasantri.store') }}">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="nim">NIM <span class="text-danger">*</span></label>
+                                                    <input type="text" name="nim" id="nim" required class="form-control @error('nim') is-invalid @enderror" value="{{ old('nim') }}">
+                                                    @error('nim')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="full_name">Nama Lengkap <span class="text-danger">*</span></label>
+                                                    <input type="text" name="full_name" id="full_name" required class="form-control @error('full_name') is-invalid @enderror" value="{{ old('full_name') }}">
+                                                    @error('full_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="email">Email <span class="text-danger">*</span></label>
+                                                    <input type="email" name="email" id="email" required class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                                                    @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="date_of_birth">Tanggal Lahir</label>
+                                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" value="{{ old('date_of_birth') }}">
+                                                    @error('date_of_birth')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="phone_number">Kontak</label>
+                                                    <input type="text" name="phone_number" id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}">
+                                                    @error('phone_number')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="address">Alamat</label>
+                                                    <input type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}">
+                                                    @error('address')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="guardian_name">Nama Wali</label>
+                                                    <input type="text" name="guardian_name" id="guardian_name" class="form-control @error('guardian_name') is-invalid @enderror" value="{{ old('guardian_name') }}">
+                                                    @error('guardian_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="guardian_contact">Kontak Wali</label>
+                                                    <input type="text" name="guardian_contact" id="guardian_contact" class="form-control @error('guardian_contact') is-invalid @enderror" value="{{ old('guardian_contact') }}">
+                                                    @error('guardian_contact')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <button type="submit" class="btn btn-primary btn-lg btn-block">Simpan Mahasantri</button>
+                                                <div class="form-text text-muted mt-2">Password default akan sama dengan NIM.</div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div>
-                            <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                            <div class="mt-1">
-                                <input type="text" name="nama_lengkap" id="nama_lengkap" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <div class="mt-1">
-                                <input type="email" name="email" id="email" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                            <div class="mt-1">
-                                <input type="password" name="password" id="password" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-                            <div class="mt-1">
-                                <textarea name="alamat" id="alamat" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-                            <div class="mt-1">
-                                <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="kontak" class="block text-sm font-medium text-gray-700">Kontak</label>
-                            <div class="mt-1">
-                                <input type="text" name="kontak" id="kontak" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="data_wali" class="block text-sm font-medium text-gray-700">Data Wali</label>
-                            <div class="mt-1">
-                                <textarea name="data_wali" id="data_wali" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-                            </div>
-                        </div>
-
-                        <div>
-                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-black bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Simpan Mahasantri
-                            </button>
-                        </div>
-                    </form>
+                    </div>
 
                     <h3 class="mt-8 text-lg font-medium text-gray-900">Daftar Mahasantri</h3>
                     <div class="mt-4 overflow-x-auto">

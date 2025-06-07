@@ -1,0 +1,47 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'role:mahasantri'])->group(function () {
+    Route::get('/mahasantri/dashboard', function () {
+        return view('mahasantri.dashboard');
+    })->name('mahasantri.dashboard');
+    // Add mahasantri specific routes here
+});
+
+Route::middleware(['auth', 'role:dosen'])->group(function () {
+    Route::get('/dosen/dashboard', function () {
+        return view('dosen.dashboard');
+    })->name('dosen.dashboard');
+    // Add dosen specific routes here
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+    Route::get('/admin/absensi', [\App\Http\Controllers\AdminController::class, 'absensi'])->name('admin.absensi');
+    Route::get('/admin/mahasantri', [\App\Http\Controllers\AdminController::class, 'mahasantri'])->name('admin.mahasantri');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/mahasantri', [\App\Http\Controllers\MahasantriController::class, 'index'])->name('mahasantri.index');
+    Route::get('/mahasantri/create', [\App\Http\Controllers\MahasantriController::class, 'create'])->name('mahasantri.create');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

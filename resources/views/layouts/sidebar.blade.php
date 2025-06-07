@@ -20,5 +20,15 @@
                 </ul>
             </li>
         </ul>
+        <ul class="sidebar-menu">
+            <li class="menu-header">User Management</li>
+            <li class="dropdown {{ Request::is('admin/users*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>Users</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/users') ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin.users.index') }}">List Users</a></li>
+                    <li class="{{ Request::is('admin/users/create') ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin.users.create') }}">Add User</a></li>
+                </ul>
+            </li>
+        </ul>
     </aside>
 </div>

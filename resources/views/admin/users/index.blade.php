@@ -9,17 +9,21 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="mb-4">
-                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add New User</a>
-                    </div>
-
-                    @if (session('success'))
-                        <div class="alert alert-success mb-4">
-                            {{ session('success') }}
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>User List</h4>
+                            <div class="card-header-action">
+                                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add New User</a>
+                            </div>
                         </div>
-                    @endif
-
-                    <table class="table table-striped">
+                        <div class="card-body p-0">
+                            @if (session('success'))
+                                <div class="alert alert-success mb-4">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            <div class="table-responsive">
+                                <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -46,6 +50,8 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+            </div>
                 </div>
             </div>
         </div>

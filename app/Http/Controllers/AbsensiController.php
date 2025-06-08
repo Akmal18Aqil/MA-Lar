@@ -14,18 +14,62 @@ class AbsensiController extends Controller
     public function index(Request $request)
     {
         $tanggal = $request->input('tanggal', now()->toDateString());
-        $bulan = $request->input('bulan', now()->format('m'));
+        $bulan = str_pad($request->input('bulan', now()->format('m')), 2, '0', STR_PAD_LEFT);
         $tahun = $request->input('tahun', now()->format('Y'));
         $filter = $request->input('filter', 'harian');
 
         $mahasantris = Mahasantri::with('user')->get();
         $kegiatan = Kegiatan::all();
-        $absensi = Absensi::whereYear('tanggal', $tahun)
-            ->when($filter === 'bulanan', fn($q) => $q->whereMonth('tanggal', $bulan))
-            ->when($filter === 'harian', fn($q) => $q->whereDate('tanggal', $tanggal))
-            ->get();
+        $absensi = Absensi::query();
+        if ($filter === 'harian') {
+            $absensi = $absensi->whereDate('tanggal', $tanggal);
+        } elseif ($filter === 'bulanan') {
+            $absensi = $absensi->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+        } elseif ($filter === 'tahunan') {
+            $absensi = $absensi->whereYear('tanggal', $tahun);
+        }
+        $absensi = $absensi->get();
 
-        return view('admin.absensi.index', compact('mahasantris', 'kegiatan', 'absensi', 'tanggal', 'bulan', 'tahun', 'filter'));
+        // Untuk filter bulanan: hitung jumlah absensi per mahasantri per kegiatan per status
+        $rekapBulanan = [];
+        if ($filter === 'bulanan') {
+            foreach ($mahasantris as $m) {
+                foreach ($kegiatan as $k) {
+                    $rekapBulanan[$m->id][$k->id] = [
+                        'hadir' => 0,
+                        'izin' => 0,
+                        'sakit' => 0,
+                        'alfa' => 0,
+                    ];
+                }
+            }
+            foreach ($absensi as $a) {
+                if (isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
+                    $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
+                }
+            }
+        }
+        // Untuk filter tahunan: rekap sama seperti bulanan, tapi untuk setahun
+        $rekapTahunan = [];
+        if ($filter === 'tahunan') {
+            foreach ($mahasantris as $m) {
+                foreach ($kegiatan as $k) {
+                    $rekapTahunan[$m->id][$k->id] = [
+                        'hadir' => 0,
+                        'izin' => 0,
+                        'sakit' => 0,
+                        'alfa' => 0,
+                    ];
+                }
+            }
+            foreach ($absensi as $a) {
+                if (isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
+                    $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
+                }
+            }
+        }
+
+        return view('admin.absensi.index', compact('mahasantris', 'kegiatan', 'absensi', 'tanggal', 'bulan', 'tahun', 'filter', 'rekapBulanan', 'rekapTahunan'));
     }
 
     public function create()

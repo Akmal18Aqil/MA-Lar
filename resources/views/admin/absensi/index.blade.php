@@ -26,55 +26,133 @@
                     </form>
                 </div>
                 <div class="table-responsive px-4 pb-4">
-                    <table class="table table-striped table-hover w-100" style="min-width:100%">
-                        <thead class="thead-light">
-                            <tr>
-                                <th style="width:40px">NIM</th>
-                                <th>Nama Mahasantri</th>
-                                @foreach($kegiatan as $k)
-                                    <th>{{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span></th>
+                    @if($filter === 'bulanan')
+                        <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:40px">NIM</th>
+                                    <th>Nama Mahasantri</th>
+                                    @foreach($kegiatan as $k)
+                                        <th>
+                                            {{ $k->nama_kegiatan }}<br>
+                                            <span class="text-xs">({{ $k->jenis }})</span><br>
+                                            <span class="badge badge-success">H</span>
+                                            <span class="badge badge-warning">I</span>
+                                            <span class="badge badge-info">S</span>
+                                            <span class="badge badge-danger">A</span>
+                                        </th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($mahasantris as $m)
+                                <tr>
+                                    <td>{{ $m->nim }}</td>
+                                    <td>{{ $m->nama_lengkap }}</td>
+                                    @foreach($kegiatan as $k)
+                                        @php
+                                            $rekap = $rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0];
+                                        @endphp
+                                        <td>
+                                            <span class="badge badge-success" title="Hadir">{{ $rekap['hadir'] }}</span>
+                                            <span class="badge badge-warning" title="Izin">{{ $rekap['izin'] }}</span>
+                                            <span class="badge badge-info" title="Sakit">{{ $rekap['sakit'] }}</span>
+                                            <span class="badge badge-danger" title="Alfa">{{ $rekap['alfa'] }}</span>
+                                        </td>
+                                    @endforeach
+                                </tr>
                                 @endforeach
-                                <th style="width:150px">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($mahasantris as $m)
-                            <tr>
-                                <td>{{ $m->nim }}</td>
-                                <td>{{ $m->nama_lengkap }}</td>
-                                @foreach($kegiatan as $k)
-                                    @php
-                                        $absen = $absensi->first(fn($a) => $a->mahasantri_id == $m->id && $a->kegiatan_id == $k->id);
-                                    @endphp
-                                    <td>
-                                        @if($absen)
-                                            <span class="badge badge-{{ $absen->status == 'hadir' ? 'success' : ($absen->status == 'alfa' ? 'danger' : 'warning') }}">
-                                                {{ ucfirst($absen->status) }}
-                                            </span>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
+                            </tbody>
+                        </table>
+                    @elseif($filter === 'tahunan')
+                        <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:40px">NIM</th>
+                                    <th>Nama Mahasantri</th>
+                                    @foreach($kegiatan as $k)
+                                        <th>
+                                            {{ $k->nama_kegiatan }}<br>
+                                            <span class="text-xs">({{ $k->jenis }})</span><br>
+                                            <span class="badge badge-success">H</span>
+                                            <span class="badge badge-warning">I</span>
+                                            <span class="badge badge-info">S</span>
+                                            <span class="badge badge-danger">A</span>
+                                        </th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($mahasantris as $m)
+                                <tr>
+                                    <td>{{ $m->nim }}</td>
+                                    <td>{{ $m->nama_lengkap }}</td>
+                                    @foreach($kegiatan as $k)
+                                        @php
+                                            $rekap = $rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0];
+                                        @endphp
+                                        <td>
+                                            <span class="badge badge-success" title="Hadir">{{ $rekap['hadir'] }}</span>
+                                            <span class="badge badge-warning" title="Izin">{{ $rekap['izin'] }}</span>
+                                            <span class="badge badge-info" title="Sakit">{{ $rekap['sakit'] }}</span>
+                                            <span class="badge badge-danger" title="Alfa">{{ $rekap['alfa'] }}</span>
+                                        </td>
+                                    @endforeach
+                                </tr>
                                 @endforeach
-                                <td>
+                            </tbody>
+                        </table>
+                    @else
+                        <table class="table table-striped table-hover w-100" style="min-width:100%">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:40px">NIM</th>
+                                    <th>Nama Mahasantri</th>
+                                    @foreach($kegiatan as $k)
+                                        <th>{{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span></th>
+                                    @endforeach
+                                    <th style="width:150px">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($mahasantris as $m)
+                                <tr>
+                                    <td>{{ $m->nim }}</td>
+                                    <td>{{ $m->nama_lengkap }}</td>
                                     @foreach($kegiatan as $k)
                                         @php
                                             $absen = $absensi->first(fn($a) => $a->mahasantri_id == $m->id && $a->kegiatan_id == $k->id);
                                         @endphp
-                                        @if($absen)
-                                            <a href="{{ route('admin.absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
-                                            <form action="{{ route('admin.absensi.destroy', $absen->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Yakin hapus absensi?')">Delete</button>
-                                            </form>
-                                        @endif
+                                        <td>
+                                            @if($absen)
+                                                <span class="badge badge-{{ $absen->status == 'hadir' ? 'success' : ($absen->status == 'alfa' ? 'danger' : 'warning') }}">
+                                                    {{ ucfirst($absen->status) }}
+                                                </span>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                     @endforeach
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    <td>
+                                        @foreach($kegiatan as $k)
+                                            @php
+                                                $absen = $absensi->first(fn($a) => $a->mahasantri_id == $m->id && $a->kegiatan_id == $k->id);
+                                            @endphp
+                                            @if($absen)
+                                                <a href="{{ route('admin.absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
+                                                <form action="{{ route('admin.absensi.destroy', $absen->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Yakin hapus absensi?')">Delete</button>
+                                                </form>
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
                 </div>
             </div>
         </div>

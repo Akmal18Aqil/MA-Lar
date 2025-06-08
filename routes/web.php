@@ -63,6 +63,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/absensi/{absensi}/edit', [AbsensiController::class, 'edit'])->name('absensi.edit');
         Route::put('/absensi/{absensi}', [AbsensiController::class, 'update'])->name('absensi.update');
         Route::delete('/absensi/{absensi}', [AbsensiController::class, 'destroy'])->name('absensi.destroy');
+
+        // Export Excel Rekap Absensi
+        Route::get('/absensi/export', [AbsensiController::class, 'export'])->name('absensi.export');
     });
 
     // User Management Routes

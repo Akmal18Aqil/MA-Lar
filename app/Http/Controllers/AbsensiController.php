@@ -8,6 +8,8 @@ use App\Models\Absensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\RekapAbsensiExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AbsensiController extends Controller
 {
@@ -119,5 +121,44 @@ class AbsensiController extends Controller
     {
         $absensi->delete();
         return redirect()->route('admin.absensi.index')->with('success', 'Absensi berhasil dihapus!');
+    }
+
+    public function export(Request $request)
+    {
+        $filter = $request->input('filter', 'bulanan');
+        $bulan = str_pad($request->input('bulan', now()->format('m')), 2, '0', STR_PAD_LEFT);
+        $tahun = $request->input('tahun', now()->format('Y'));
+
+        $mahasantris = Mahasantri::with('user')->get();
+        $kegiatan = Kegiatan::all();
+        $absensi = Absensi::query();
+        if ($filter === 'bulanan') {
+            $absensi = $absensi->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+        } elseif ($filter === 'tahunan') {
+            $absensi = $absensi->whereYear('tanggal', $tahun);
+        } else {
+            abort(404);
+        }
+        $absensi = $absensi->get();
+
+        $rekap = [];
+        foreach ($mahasantris as $m) {
+            foreach ($kegiatan as $k) {
+                $rekap[$m->id][$k->id] = [
+                    'hadir' => 0,
+                    'izin' => 0,
+                    'sakit' => 0,
+                    'alfa' => 0,
+                ];
+            }
+        }
+        foreach ($absensi as $a) {
+            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
+                $rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
+            }
+        }
+
+        $fileName = 'Rekap_Absensi_' . $filter . '_' . ($filter === 'bulanan' ? $bulan . '_' : '') . $tahun . '.xlsx';
+        return Excel::download(new RekapAbsensiExport($mahasantris, $kegiatan, $rekap, $filter, $bulan, $tahun), $fileName);
     }
 }

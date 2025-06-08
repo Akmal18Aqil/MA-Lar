@@ -22,25 +22,31 @@
                         <input type="number" name="bulan" min="1" max="12" value="{{ $bulan ?? '' }}" class="form-control mr-2 mb-2" placeholder="Bulan" />
                         <input type="number" name="tahun" min="2020" value="{{ $tahun ?? '' }}" class="form-control mr-2 mb-2" placeholder="Tahun" />
                         <button type="submit" class="btn btn-primary mb-2 mr-2"><i class="fas fa-filter"></i> Filter</button>
+                        @if($filter === 'bulanan' || $filter === 'tahunan')
+                        <a href="{{ route('admin.absensi.export', array_merge(request()->all(), ['filter'=>$filter,'bulan'=>$bulan,'tahun'=>$tahun])) }}" class="btn btn-success mb-2 ml-2">
+                            <i class="fas fa-file-excel"></i> Export Excel
+                        </a>
+                        @endif
                         <a href="?libur=1&tanggal={{ $tanggal ?? '' }}" class="btn btn-danger mb-2"><i class="fas fa-calendar-times"></i> Tandai Hari Libur</a>
                     </form>
                 </div>
                 <div class="table-responsive px-4 pb-4">
-                    @if($filter === 'bulanan')
+                    @if($filter === 'bulanan' || $filter === 'tahunan')
                         <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%">
                             <thead class="thead-light">
                                 <tr>
-                                    <th style="width:40px">NIM</th>
-                                    <th>Nama Mahasantri</th>
+                                    <th style="width:40px" rowspan="2">NIM</th>
+                                    <th rowspan="2">Nama Mahasantri</th>
                                     @foreach($kegiatan as $k)
-                                        <th>
-                                            {{ $k->nama_kegiatan }}<br>
-                                            <span class="text-xs">({{ $k->jenis }})</span><br>
-                                            <span class="badge badge-success">H</span>
-                                            <span class="badge badge-warning">I</span>
-                                            <span class="badge badge-info">S</span>
-                                            <span class="badge badge-danger">A</span>
-                                        </th>
+                                        <th colspan="4" class="text-center">{{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span></th>
+                                    @endforeach
+                                </tr>
+                                <tr>
+                                    @foreach($kegiatan as $k)
+                                        <th class="text-center">H</th>
+                                        <th class="text-center">I</th>
+                                        <th class="text-center">S</th>
+                                        <th class="text-center">A</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -51,52 +57,12 @@
                                     <td>{{ $m->nama_lengkap }}</td>
                                     @foreach($kegiatan as $k)
                                         @php
-                                            $rekap = $rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0];
+                                            $rekap = ($filter === 'bulanan' ? ($rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0]) : ($rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0]));
                                         @endphp
-                                        <td>
-                                            <span class="badge badge-success" title="Hadir">{{ $rekap['hadir'] }}</span>
-                                            <span class="badge badge-warning" title="Izin">{{ $rekap['izin'] }}</span>
-                                            <span class="badge badge-info" title="Sakit">{{ $rekap['sakit'] }}</span>
-                                            <span class="badge badge-danger" title="Alfa">{{ $rekap['alfa'] }}</span>
-                                        </td>
-                                    @endforeach
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @elseif($filter === 'tahunan')
-                        <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th style="width:40px">NIM</th>
-                                    <th>Nama Mahasantri</th>
-                                    @foreach($kegiatan as $k)
-                                        <th>
-                                            {{ $k->nama_kegiatan }}<br>
-                                            <span class="text-xs">({{ $k->jenis }})</span><br>
-                                            <span class="badge badge-success">H</span>
-                                            <span class="badge badge-warning">I</span>
-                                            <span class="badge badge-info">S</span>
-                                            <span class="badge badge-danger">A</span>
-                                        </th>
-                                    @endforeach
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($mahasantris as $m)
-                                <tr>
-                                    <td>{{ $m->nim }}</td>
-                                    <td>{{ $m->nama_lengkap }}</td>
-                                    @foreach($kegiatan as $k)
-                                        @php
-                                            $rekap = $rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0];
-                                        @endphp
-                                        <td>
-                                            <span class="badge badge-success" title="Hadir">{{ $rekap['hadir'] }}</span>
-                                            <span class="badge badge-warning" title="Izin">{{ $rekap['izin'] }}</span>
-                                            <span class="badge badge-info" title="Sakit">{{ $rekap['sakit'] }}</span>
-                                            <span class="badge badge-danger" title="Alfa">{{ $rekap['alfa'] }}</span>
-                                        </td>
+                                        <td class="text-center">{{ $rekap['hadir'] }}</td>
+                                        <td class="text-center">{{ $rekap['izin'] }}</td>
+                                        <td class="text-center">{{ $rekap['sakit'] }}</td>
+                                        <td class="text-center">{{ $rekap['alfa'] }}</td>
                                     @endforeach
                                 </tr>
                                 @endforeach

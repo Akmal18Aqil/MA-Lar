@@ -16,8 +16,9 @@
                         <thead class="thead-light">
                             <tr>
                                 <th style="width:40px">#</th>
-                                <th>Name</th>
-                                <th>Created At</th>
+                                <th>NIM</th>
+                                <th>Nama Lengkap</th>
+                                <th>Email</th>
                                 <th>Status</th>
                                 <th style="width:120px">Action</th>
                             </tr>
@@ -27,8 +28,9 @@
                             @foreach($mahasantris ?? [] as $m)
                             <tr>
                                 <td>{{ $i++ }}</td>
-                                <td>{{ $m->full_name }}</td>
-                                <td>{{ $m->created_at ? $m->created_at->format('Y-m-d') : '-' }}</td>
+                                <td>{{ $m->nim }}</td>
+                                <td>{{ $m->nama_lengkap }}</td>
+                                <td>{{ $m->user->email }}</td>
                                 <td>
                                     @if($m->status === 'active')
                                         <span class="badge badge-success">Active</span>
@@ -37,13 +39,13 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="#" class="btn btn-secondary btn-sm" disabled>Detail</a>
+                                    <a href="#" class="btn btn-secondary btn-sm">Detail</a>
                                 </td>
                             </tr>
                             @endforeach
                             @if(empty($mahasantris) || count($mahasantris) === 0)
                             <tr>
-                                <td colspan="5" class="text-center text-muted">Belum ada data Mahasantri.</td>
+                                <td colspan="6" class="text-center text-muted">Belum ada data Mahasantri.</td>
                             </tr>
                             @endif
                         </tbody>

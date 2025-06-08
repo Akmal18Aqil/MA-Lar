@@ -19,6 +19,10 @@ class Mahasantri extends Model
         'kontak_wali',
     ];
 
+    protected $casts = [
+        'tanggal_lahir' => 'date'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -38,5 +42,4 @@ class Mahasantri extends Model
     {
         return $this->hasMany(Hukuman::class);
     }
-    //
 }

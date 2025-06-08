@@ -39,8 +39,13 @@
                     <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">
                         @csrf
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" tabindex="1" required autofocus value="{{ old('email') }}">
+                            <label for="email">Email/NIM</label>
+                            <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" 
+                                name="email" tabindex="1" required autofocus value="{{ old('email') }}"
+                                placeholder="Masukkan Email atau NIM">
+                            <small class="form-text text-muted">
+                                Masukkan Email atau NIM Anda. Untuk Mahasantri bisa menggunakan NIM.
+                            </small>
                             @error('email')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -51,15 +56,12 @@
                         <div class="form-group">
                             <div class="d-block">
                                 <label for="password" class="control-label">Password</label>
-                                <div class="float-right">
-                                    @if (Route::has('password.request'))
-                                        <a href="{{ route('password.request') }}" class="text-small">
-                                            Forgot Password?
-                                        </a>
-                                    @endif
-                                </div>
                             </div>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" tabindex="2" required>
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
+                                name="password" tabindex="2" required>
+                            <small class="form-text text-muted">
+                                Password default untuk Mahasantri adalah NIM Anda.
+                            </small>
                             @error('password')
                             <div class="invalid-feedback">
                                 {{ $message }}

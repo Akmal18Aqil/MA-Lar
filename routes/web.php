@@ -5,6 +5,7 @@ use App\Http\Controllers\MahasantriController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AbsensiController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -39,7 +40,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/mahasantri/{mahasantri}', [MahasantriController::class, 'destroy'])->name('mahasantri.destroy');
 
         // Other admin routes
-        Route::get('/absensi', [AdminController::class, 'absensi'])->name('absensi');
+        // Route::get('/absensi', [AdminController::class, 'absensi'])->name('absensi');
+
+        // Absensi CRUD
+        Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+        Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
+        Route::post('/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
+        Route::get('/absensi/{absensi}/edit', [AbsensiController::class, 'edit'])->name('absensi.edit');
+        Route::put('/absensi/{absensi}', [AbsensiController::class, 'update'])->name('absensi.update');
+        Route::delete('/absensi/{absensi}', [AbsensiController::class, 'destroy'])->name('absensi.destroy');
     });
 
     // User Management Routes

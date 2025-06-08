@@ -16,7 +16,7 @@
                 </li>
                 <li class="menu-header">Absensi</li>
                 <li class="{{ Request::is('admin/absensi') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('admin.absensi') }}"><i class="fas fa-calendar-check"></i><span>Input Absensi</span></a>
+                    <a class="nav-link" href="{{ route('admin.absensi.index') }}"><i class="fas fa-calendar-check"></i><span>Input Absensi</span></a>
                 </li>
                 <li class="menu-header">Mahasantri</li>
                 <li class="{{ Request::is('admin/mahasantri') ? 'active' : '' }}">

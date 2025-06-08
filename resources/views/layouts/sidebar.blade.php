@@ -20,7 +20,7 @@
                 </li>
                 <li class="menu-header">Mahasantri</li>
                 <li class="{{ Request::is('admin/mahasantri') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('admin.mahasantri') }}"><i class="fas fa-user-graduate"></i><span>Manajemen Mahasantri</span></a>
+                    <a class="nav-link" href="{{ route('admin.mahasantri.index') }}"><i class="fas fa-user-graduate"></i><span>Manajemen Mahasantri</span></a>
                 </li>
                 <li class="menu-header">User Management</li>
                 <li class="{{ Request::is('admin/users') ? 'active' : '' }}">

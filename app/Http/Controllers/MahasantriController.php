@@ -19,7 +19,7 @@ class MahasantriController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nim' => 'required|unique:mahasantris,nim',
+            'nim' => 'required|unique:mahasantri,nim',
             'email' => 'required|email|unique:users,email',
             'full_name' => 'required',
             'address' => 'nullable',
@@ -41,12 +41,12 @@ class MahasantriController extends Controller
         \App\Models\Mahasantri::create([
             'user_id' => $user->id,
             'nim' => $validated['nim'],
-            'full_name' => $validated['full_name'],
-            'address' => $validated['address'] ?? null,
-            'date_of_birth' => $validated['date_of_birth'] ?? null,
-            'phone_number' => $validated['phone_number'] ?? null,
-            'guardian_name' => $validated['guardian_name'] ?? null,
-            'guardian_contact' => $validated['guardian_contact'] ?? null,
+            'nama_lengkap' => $validated['full_name'],
+            'alamat' => $validated['address'] ?? null,
+            'tanggal_lahir' => $validated['date_of_birth'] ?? null,
+            'no_hp' => $validated['phone_number'] ?? null,
+            'nama_wali' => $validated['guardian_name'] ?? null,
+            'kontak_wali' => $validated['guardian_contact'] ?? null,
         ]);
 
         return redirect()->route('admin.mahasantri')->with('success', 'Mahasantri berhasil ditambahkan!');

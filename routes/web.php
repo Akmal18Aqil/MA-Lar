@@ -27,7 +27,8 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/absensi', [\App\Http\Controllers\AdminController::class, 'absensi'])->name('admin.absensi');
-    Route::get('/admin/mahasantri', [\App\Http\Controllers\AdminController::class, 'mahasantri'])->name('admin.mahasantri');
+    Route::get('/admin/mahasantri', [\App\Http\Controllers\AdminController::class, 'mahasantriIndex'])->name('admin.mahasantri.index');
+    Route::get('/admin/mahasantri/tambah', [\App\Http\Controllers\AdminController::class, 'mahasantri'])->name('admin.mahasantri');
 
     // User Management Routes
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');

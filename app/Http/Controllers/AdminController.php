@@ -26,4 +26,14 @@ class AdminController extends Controller
     {
         return view('admin.mahasantri');
     }
+
+    public function mahasantriIndex()
+    {
+        // Ambil data Mahasantri beserta user (email) dan status dummy, gunakan pagination
+        $mahasantris = \App\Models\Mahasantri::with('user')->paginate(10);
+        foreach ($mahasantris as $m) {
+            $m->status = 'active'; // Atur status dummy, ganti sesuai kebutuhan
+        }
+        return view('admin.mahasantri-index', compact('mahasantris'));
+    }
 }

@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mahasantri extends Model
 {
+    protected $table = 'mahasantri';
+
     protected $fillable = [
         'user_id',
         'nim',
-        'full_name',
-        'address',
-        'date_of_birth',
-        'phone_number',
-        'guardian_name',
-        'guardian_contact',
+        'nama_lengkap',
+        'alamat',
+        'tanggal_lahir',
+        'no_hp',
+        'nama_wali',
+        'kontak_wali',
     ];
 
     public function user()

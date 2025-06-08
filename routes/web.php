@@ -11,7 +11,21 @@ use App\Http\Controllers\AbsensiController;
 //     return view('welcome');
 // });
 
-Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.dashboard');
+Route::get('/', function () {
+    if (!\Illuminate\Support\Facades\Auth::check()) {
+        return redirect()->route('login');
+    }
+    $role = \Illuminate\Support\Facades\Auth::user()->role ?? null;
+    if ($role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif ($role === 'dosen') {
+        return redirect()->route('dosen.dashboard');
+    } elseif ($role === 'mahasantri') {
+        return redirect()->route('mahasantri.dashboard');
+    } else {
+        abort(403, 'Unauthorized');
+    }
+})->name('home');
 
 Route::middleware(['auth', 'role:mahasantri'])->group(function () {
     Route::get('/mahasantri/dashboard', function () {

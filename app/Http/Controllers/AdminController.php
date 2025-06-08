@@ -34,6 +34,6 @@ class AdminController extends Controller
         foreach ($mahasantris as $m) {
             $m->status = 'active'; // Atur status dummy, ganti sesuai kebutuhan
         }
-        return view('admin.mahasantri-index', compact('mahasantris'));
+        return view('admin.mahasantri.index', compact('mahasantris'));
     }
 }

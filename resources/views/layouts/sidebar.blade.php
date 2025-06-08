@@ -1,10 +1,21 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="/">SIAKAD</a>
+            @php
+                $role = Auth::user()->role ?? null;
+                $dashboardRoute = '#';
+                if ($role === 'admin') {
+                    $dashboardRoute = route('admin.dashboard');
+                } elseif ($role === 'dosen') {
+                    $dashboardRoute = route('dosen.dashboard');
+                } elseif ($role === 'mahasantri') {
+                    $dashboardRoute = route('mahasantri.dashboard');
+                }
+            @endphp
+            <a href="{{ $dashboardRoute }}">SIAKAD</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="/">SKD</a>
+            <a href="{{ $dashboardRoute }}">SKD</a>
         </div>
 
         <ul class="sidebar-menu">

@@ -20,7 +20,7 @@
                                 <th>Nama Lengkap</th>
                                 <th>Email</th>
                                 <th>Status</th>
-                                <th style="width:120px">Action</th>
+                                <th style="width:150px">Action</th>
                             </tr>
                         </thead>
                         <tbody>

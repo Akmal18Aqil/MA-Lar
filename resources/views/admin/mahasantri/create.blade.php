@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manajemen Mahasantri') }}
+            {{ __('Tambah Mahasantri') }}
         </h2>
     </x-slot>
     <div class="section-body">
@@ -9,7 +9,7 @@
             <div class="col-12 col-md-10 col-lg-8">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Tambah Mahasantri</h4>
+                        <h4 class="mb-0">Form Tambah Mahasantri</h4>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.mahasantri.store') }}">
@@ -33,32 +33,32 @@
                                     @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="date_of_birth">Tanggal Lahir</label>
-                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" value="{{ old('date_of_birth') }}">
+                                    <label for="date_of_birth">Tanggal Lahir <span class="text-danger">*</span></label>
+                                    <input type="date" name="date_of_birth" id="date_of_birth" required class="form-control @error('date_of_birth') is-invalid @enderror" value="{{ old('date_of_birth') }}">
                                     @error('date_of_birth')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="phone_number">Kontak</label>
-                                    <input type="text" name="phone_number" id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}">
+                                    <label for="phone_number">Nomor HP <span class="text-danger">*</span></label>
+                                    <input type="text" name="phone_number" id="phone_number" required class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}">
                                     @error('phone_number')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="address">Alamat</label>
-                                    <input type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}">
+                                    <label for="address">Alamat <span class="text-danger">*</span></label>
+                                    <textarea name="address" id="address" required class="form-control @error('address') is-invalid @enderror" rows="3">{{ old('address') }}</textarea>
                                     @error('address')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="guardian_name">Nama Wali</label>
-                                    <input type="text" name="guardian_name" id="guardian_name" class="form-control @error('guardian_name') is-invalid @enderror" value="{{ old('guardian_name') }}">
+                                    <label for="guardian_name">Nama Wali <span class="text-danger">*</span></label>
+                                    <input type="text" name="guardian_name" id="guardian_name" required class="form-control @error('guardian_name') is-invalid @enderror" value="{{ old('guardian_name') }}">
                                     @error('guardian_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="guardian_contact">Kontak Wali</label>
-                                    <input type="text" name="guardian_contact" id="guardian_contact" class="form-control @error('guardian_contact') is-invalid @enderror" value="{{ old('guardian_contact') }}">
+                                    <label for="guardian_contact">Kontak Wali <span class="text-danger">*</span></label>
+                                    <input type="text" name="guardian_contact" id="guardian_contact" required class="form-control @error('guardian_contact') is-invalid @enderror" value="{{ old('guardian_contact') }}">
                                     @error('guardian_contact')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>

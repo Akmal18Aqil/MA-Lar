@@ -11,12 +11,17 @@ class MahasantriController extends Controller
 {
     public function index()
     {
-        return view('mahasantri.index');
+        $mahasantris = Mahasantri::with('user')->paginate(10);
+        foreach ($mahasantris as $m) {
+            $m->status = 'active'; // Default status, can be modified later
+        }
+        $mahasantris->withPath(route('admin.mahasantri.index'));
+        return view('admin.mahasantri.index', compact('mahasantris'));
     }
 
     public function create()
     {
-        return view('mahasantri.create');
+        return view('admin.mahasantri.create');
     }
 
     public function store(Request $request)
@@ -56,13 +61,83 @@ class MahasantriController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('admin.mahasantri')->with('success', 'Mahasantri berhasil ditambahkan!');
+            return redirect()->route('admin.mahasantri.index')
+                ->with('success', 'Mahasantri berhasil ditambahkan!');
 
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data. ' . $e->getMessage()]);
+        }
+    }
+
+    public function edit(Mahasantri $mahasantri)
+    {
+        return view('admin.mahasantri.edit', compact('mahasantri'));
+    }
+
+    public function update(Request $request, Mahasantri $mahasantri)
+    {
+        $validated = $request->validate([
+            'nim' => 'required|unique:mahasantri,nim,'.$mahasantri->id,
+            'email' => 'required|email|unique:users,email,'.$mahasantri->user_id,
+            'full_name' => 'required',
+            'address' => 'required',
+            'date_of_birth' => 'required|date',
+            'phone_number' => 'required',
+            'guardian_name' => 'required',
+            'guardian_contact' => 'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Update user
+            $mahasantri->user->update([
+                'name' => $validated['full_name'],
+                'email' => $validated['email'],
+            ]);
+
+            // Update mahasantri
+            $mahasantri->update([
+                'nim' => $validated['nim'],
+                'nama_lengkap' => $validated['full_name'],
+                'alamat' => $validated['address'],
+                'tanggal_lahir' => $validated['date_of_birth'],
+                'no_hp' => $validated['phone_number'],
+                'nama_wali' => $validated['guardian_name'],
+                'kontak_wali' => $validated['guardian_contact'],
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.mahasantri.index')
+                ->with('success', 'Data Mahasantri berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data. ' . $e->getMessage()]);
+        }
+    }
+
+    public function destroy(Mahasantri $mahasantri)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Delete user will cascade delete mahasantri due to foreign key constraint
+            $mahasantri->user->delete();
+
+            DB::commit();
+            return redirect()->route('admin.mahasantri.index')
+                ->with('success', 'Data Mahasantri berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()
+                ->withErrors(['error' => 'Terjadi kesalahan saat menghapus data. ' . $e->getMessage()]);
         }
     }
 }

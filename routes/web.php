@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MahasantriController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -25,10 +27,20 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/absensi', [\App\Http\Controllers\AdminController::class, 'absensi'])->name('admin.absensi');
-    Route::get('/admin/mahasantri', [\App\Http\Controllers\AdminController::class, 'mahasantriIndex'])->name('admin.mahasantri.index');
-    Route::get('/admin/mahasantri/tambah', [\App\Http\Controllers\AdminController::class, 'mahasantri'])->name('admin.mahasantri');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        
+        // Mahasantri routes
+        Route::get('/mahasantri/create', [MahasantriController::class, 'create'])->name('mahasantri.create');
+        Route::post('/mahasantri', [MahasantriController::class, 'store'])->name('mahasantri.store');
+        Route::get('/mahasantri', [MahasantriController::class, 'index'])->name('mahasantri.index');
+        Route::get('/mahasantri/{mahasantri}/edit', [MahasantriController::class, 'edit'])->name('mahasantri.edit');
+        Route::put('/mahasantri/{mahasantri}', [MahasantriController::class, 'update'])->name('mahasantri.update');
+        Route::delete('/mahasantri/{mahasantri}', [MahasantriController::class, 'destroy'])->name('mahasantri.destroy');
+
+        // Other admin routes
+        Route::get('/absensi', [AdminController::class, 'absensi'])->name('absensi');
+    });
 
     // User Management Routes
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
@@ -37,12 +49,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
     Route::patch('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-});
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/mahasantri', [\App\Http\Controllers\MahasantriController::class, 'index'])->name('mahasantri.index');
-    Route::get('/mahasantri/create', [\App\Http\Controllers\MahasantriController::class, 'create'])->name('mahasantri.create');
-    Route::post('/admin/mahasantri', [\App\Http\Controllers\MahasantriController::class, 'store'])->name('admin.mahasantri.store');
 });
 
 Route::middleware('auth')->group(function () {

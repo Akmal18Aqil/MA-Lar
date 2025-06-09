@@ -9,7 +9,7 @@
             <div class="bg-white rounded shadow-sm p-0" style="border:1px solid #ececec;">
                 <div class="d-flex justify-content-between align-items-center px-4 pt-4 pb-2">
                     <h4 class="mb-0 font-weight-bold" style="color:#6c63ff">Absensi</h4>
-                    <a href="{{ route('admin.absensi.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah Absensi</a>
+                    <a href="{{ route('admin.absensi.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Absensi</a>
                 </div>
                 <div class="px-4 pb-2">
                     <form method="GET" class="form-inline mb-2">
@@ -21,7 +21,7 @@
                         </select>
                         <input type="number" name="bulan" min="1" max="12" value="{{ $bulan ?? '' }}" class="form-control mr-2 mb-2" placeholder="Bulan" />
                         <input type="number" name="tahun" min="2020" value="{{ $tahun ?? '' }}" class="form-control mr-2 mb-2" placeholder="Tahun" />
-                        <button type="submit" class="btn btn-primary mb-2 mr-2"><i class="fas fa-filter"></i> Filter</button>
+                        <button type="submit" class="btn btn-primary mb-2 mr-2"><i class="fa fa-filter"></i> Filter</button>
                         @if($filter === 'bulanan' || $filter === 'tahunan')
                         <a href="{{ route('admin.absensi.export', array_merge(request()->all(), ['filter'=>$filter,'bulan'=>$bulan,'tahun'=>$tahun])) }}" class="btn btn-success mb-2 ml-2">
                             <i class="fas fa-file-excel"></i> Export Excel
@@ -127,7 +127,6 @@
                                     @foreach($kegiatan as $k)
                                         <th>{{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span></th>
                                     @endforeach
-                                    <th style="width:150px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,30 +143,21 @@
                                             @if($isLibur)
                                                 <span class="badge badge-danger">Libur</span>
                                             @elseif($absen)
-                                                <span class="badge badge-{{ $absen->status == 'hadir' ? 'success' : ($absen->status == 'alfa' ? 'danger' : 'warning') }}">
-                                                    {{ ucfirst($absen->status) }}
-                                                </span>
+                                                <div class="d-flex align-items-center" style="gap:2px;">
+                                                    <span class="badge badge-{{ $absen->status == 'hadir' ? 'success' : ($absen->status == 'alfa' ? 'danger' : 'warning') }}">{{ ucfirst($absen->status) }}</span>
+                                                    <form action="{{ route('admin.absensi.destroy', $absen->id) }}" method="POST" class="d-inline m-0 p-0">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline" style="color:#dc3545; margin-left:2px;" title="Hapus" onclick="return confirm('Yakin hapus absensi?')">
+                                                            <i class="fa fa-trash fa-xs"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             @else
                                                 <span class="text-muted">-</span>
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td>
-                                        @php
-                                            // Ambil absensi pertama yang ditemukan untuk mahasantri ini
-                                            $absenPertama = $absensi->first(fn($a) => $a->mahasantri_id == $m->id);
-                                        @endphp
-                                        @if($absenPertama)
-                                            <a href="{{ route('admin.absensi.edit', $absenPertama->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
-                                            <form action="{{ route('admin.absensi.destroy', $absenPertama->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Yakin hapus absensi?')">Delete</button>
-                                            </form>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

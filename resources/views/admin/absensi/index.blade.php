@@ -153,19 +153,20 @@
                                         </td>
                                     @endforeach
                                     <td>
-                                        @foreach($kegiatan as $k)
-                                            @php
-                                                $absen = $absensi->first(fn($a) => $a->mahasantri_id == $m->id && $a->kegiatan_id == $k->id);
-                                            @endphp
-                                            @if($absen)
-                                                <a href="{{ route('admin.absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
-                                                <form action="{{ route('admin.absensi.destroy', $absen->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Yakin hapus absensi?')">Delete</button>
-                                                </form>
-                                            @endif
-                                        @endforeach
+                                        @php
+                                            // Ambil absensi pertama yang ditemukan untuk mahasantri ini
+                                            $absenPertama = $absensi->first(fn($a) => $a->mahasantri_id == $m->id);
+                                        @endphp
+                                        @if($absenPertama)
+                                            <a href="{{ route('admin.absensi.edit', $absenPertama->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
+                                            <form action="{{ route('admin.absensi.destroy', $absenPertama->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Yakin hapus absensi?')">Delete</button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

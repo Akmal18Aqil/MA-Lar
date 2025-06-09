@@ -66,6 +66,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         // Export Excel Rekap Absensi
         Route::get('/absensi/export', [AbsensiController::class, 'export'])->name('absensi.export');
+
+        // Hapus libur route
+        Route::get('/absensi/hapus-libur', [AbsensiController::class, 'hapusLibur'])->name('absensi.hapusLibur');
     });
 
     // User Management Routes

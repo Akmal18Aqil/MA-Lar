@@ -27,7 +27,32 @@
                             <i class="fas fa-file-excel"></i> Export Excel
                         </a>
                         @endif
-                        <a href="?libur=1&tanggal={{ $tanggal ?? '' }}" class="btn btn-danger mb-2"><i class="fas fa-calendar-times"></i> Tandai Hari Libur</a>
+                        <div class="d-flex align-items-center mb-2">
+                            <select name="kegiatan_id" class="form-control mr-2" style="min-width:180px">
+                                <option value="">Pilih Kegiatan</option>
+                                @php
+                                    $liburKegiatan = $liburKegiatan ?? [];
+                                @endphp
+                                @foreach($kegiatan as $k)
+                                    <option value="{{ $k->id }}" @if(is_array($liburKegiatan) && in_array($k->id, $liburKegiatan)) disabled @endif>
+                                        {{ $k->nama_kegiatan }} ({{ $k->jenis }})
+                                        @if(is_array($liburKegiatan) && in_array($k->id, $liburKegiatan)) - Libur @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            <a href="#" onclick="tandaiKegiatanLibur(event)" class="btn btn-danger"><i class="fas fa-calendar-times"></i> Tandai Kegiatan Libur</a>
+                            @if(is_array($liburKegiatan) && count($liburKegiatan) > 0)
+                                <div class="ml-2">
+                                    @foreach($kegiatan as $k)
+                                        @if(in_array($k->id, $liburKegiatan))
+                                            <button type="button" class="btn btn-outline-secondary btn-sm mb-1 hapus-libur-btn" data-kegiatan="{{ $k->id }}">
+                                                <i class="fas fa-trash"></i> Hapus Libur {{ $k->nama_kegiatan }}
+                                            </button>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                     </form>
                 </div>
                 <div class="table-responsive px-4 pb-4">
@@ -38,7 +63,12 @@
                                     <th style="width:40px" rowspan="2">NIM</th>
                                     <th rowspan="2">Nama Mahasantri</th>
                                     @foreach($kegiatan as $k)
-                                        <th colspan="4" class="text-center">{{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span></th>
+                                        <th colspan="4" class="text-center">
+                                            {{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span>
+                                            @if(is_array($liburKegiatan) && in_array($k->id, $liburKegiatan))
+                                                <span class="badge badge-danger ml-1">Libur</span>
+                                            @endif
+                                        </th>
                                     @endforeach
                                 </tr>
                                 <tr>
@@ -57,16 +87,36 @@
                                     <td>{{ $m->nama_lengkap }}</td>
                                     @foreach($kegiatan as $k)
                                         @php
+                                            $isLibur = is_array($liburKegiatan) && in_array($k->id, $liburKegiatan);
                                             $rekap = ($filter === 'bulanan' ? ($rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0]) : ($rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0]));
                                         @endphp
-                                        <td class="text-center">{{ $rekap['hadir'] }}</td>
-                                        <td class="text-center">{{ $rekap['izin'] }}</td>
-                                        <td class="text-center">{{ $rekap['sakit'] }}</td>
-                                        <td class="text-center">{{ $rekap['alfa'] }}</td>
+                                        @if($isLibur)
+                                            <td class="text-center"><span class="badge badge-danger">Libur</span></td>
+                                            <td class="text-center" colspan="3"><span class="text-muted">-</span></td>
+                                        @else
+                                            <td class="text-center">{{ $rekap['hadir'] }}</td>
+                                            <td class="text-center">{{ $rekap['izin'] }}</td>
+                                            <td class="text-center">{{ $rekap['sakit'] }}</td>
+                                            <td class="text-center">{{ $rekap['alfa'] }}</td>
+                                        @endif
                                     @endforeach
                                 </tr>
                                 @endforeach
                             </tbody>
+                        </table>
+                        <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%; margin-top: -1px;">
+                            <tr>
+                                <td colspan="2" style="font-weight:bold; text-align:right;">Jumlah Libur</td>
+                                @foreach($kegiatan as $k)
+                                    @php
+                                        $liburCount = 0;
+                                        if(isset($liburKegiatanCount) && isset($liburKegiatanCount[$k->id])) {
+                                            $liburCount = $liburKegiatanCount[$k->id];
+                                        }
+                                    @endphp
+                                    <td colspan="4" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
+                                @endforeach
+                            </tr>
                         </table>
                     @else
                         <table class="table table-striped table-hover w-100" style="min-width:100%">
@@ -87,10 +137,13 @@
                                     <td>{{ $m->nama_lengkap }}</td>
                                     @foreach($kegiatan as $k)
                                         @php
+                                            $isLibur = is_array($liburKegiatan) && in_array($k->id, $liburKegiatan);
                                             $absen = $absensi->first(fn($a) => $a->mahasantri_id == $m->id && $a->kegiatan_id == $k->id);
                                         @endphp
                                         <td>
-                                            @if($absen)
+                                            @if($isLibur)
+                                                <span class="badge badge-danger">Libur</span>
+                                            @elseif($absen)
                                                 <span class="badge badge-{{ $absen->status == 'hadir' ? 'success' : ($absen->status == 'alfa' ? 'danger' : 'warning') }}">
                                                     {{ ucfirst($absen->status) }}
                                                 </span>
@@ -124,3 +177,31 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+function tandaiKegiatanLibur(e) {
+    e.preventDefault();
+    var tanggal = document.querySelector('input[name="tanggal"]').value;
+    var kegiatanId = document.querySelector('select[name="kegiatan_id"]').value;
+    if (!tanggal || !kegiatanId) {
+        alert('Pilih tanggal dan kegiatan terlebih dahulu!');
+        return;
+    }
+    window.location.href = `?libur=1&tanggal=${tanggal}&kegiatan_id=${kegiatanId}`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.hapus-libur-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var tanggal = document.querySelector('input[name="tanggal"]').value;
+            var kegiatanId = this.getAttribute('data-kegiatan');
+            if (!tanggal || !kegiatanId) {
+                alert('Pilih tanggal dan kegiatan yang ingin dihapus liburnya!');
+                return;
+            }
+            if(confirm('Yakin ingin menghapus status libur pada kegiatan ini?')){
+                window.location.href = `/admin/absensi/hapus-libur?tanggal=${tanggal}&kegiatan_id=${kegiatanId}`;
+            }
+        });
+    });
+});
+</script>

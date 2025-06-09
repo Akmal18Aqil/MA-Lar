@@ -9,16 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class MahasantriController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Mahasantri::with('user');
-        if ($request->filled('semester')) {
-            $query->where('semester', $request->semester);
-        }
-        if ($request->filled('status_lulus')) {
-            $query->where('status_lulus', $request->status_lulus);
-        }
-        $mahasantris = $query->paginate(10);
+        $mahasantris = Mahasantri::with('user')->paginate(10);
         foreach ($mahasantris as $m) {
             $m->status = 'active'; // Default status, can be modified later
         }

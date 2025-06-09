@@ -186,15 +186,7 @@ class AbsensiController extends Controller
         $bulan = str_pad($request->input('bulan', now()->format('m')), 2, '0', STR_PAD_LEFT);
         $tahun = $request->input('tahun', now()->format('Y'));
 
-        // Terapkan filter semester dan status_lulus
-        $mahasantris = Mahasantri::with('user')
-            ->when($request->filled('semester'), function($q) use ($request) {
-                $q->where('semester', $request->semester);
-            })
-            ->when($request->filled('status_lulus'), function($q) use ($request) {
-                $q->where('status_lulus', $request->status_lulus);
-            })
-            ->get();
+        $mahasantris = Mahasantri::with('user')->get();
         $kegiatan = Kegiatan::all();
         $absensi = Absensi::query();
         if ($filter === 'bulanan') {

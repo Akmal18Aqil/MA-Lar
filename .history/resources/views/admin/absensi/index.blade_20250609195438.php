@@ -21,21 +21,9 @@
                         </select>
                         <input type="number" name="bulan" min="1" max="12" value="{{ $bulan ?? '' }}" class="form-control mr-2 mb-2" placeholder="Bulan" />
                         <input type="number" name="tahun" min="2020" value="{{ $tahun ?? '' }}" class="form-control mr-2 mb-2" placeholder="Tahun" />
-                        <div class="form-group mb-0 mr-2">
-                            <label for="filter_semester" class="mb-0">Semester</label>
-                            <input type="text" name="semester" id="filter_semester" class="form-control form-control-sm" value="{{ request('semester') }}" placeholder="Semester">
-                        </div>
-                        <div class="form-group mb-0 mr-2">
-                            <label for="filter_status_lulus" class="mb-0">Status Lulus</label>
-                            <select name="status_lulus" id="filter_status_lulus" class="form-control form-control-sm">
-                                <option value="">Semua</option>
-                                <option value="belum" {{ request('status_lulus') == 'belum' ? 'selected' : '' }}>Belum Lulus</option>
-                                <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
-                            </select>
-                        </div>
                         <button type="submit" class="btn btn-primary mb-2 mr-2"><i class="fa fa-filter"></i> Filter</button>
                         @if($filter === 'bulanan' || $filter === 'tahunan')
-                        <a href="{{ route('admin.absensi.export', request()->all()) }}" class="btn btn-success mb-2 ml-2">
+                        <a href="{{ route('admin.absensi.export', array_merge(request()->all(), ['filter'=>$filter,'bulan'=>$bulan,'tahun'=>$tahun])) }}" class="btn btn-success mb-2 ml-2">
                             <i class="fas fa-file-excel"></i> Export Excel
                         </a>
                         @endif

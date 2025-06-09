@@ -35,7 +35,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary mb-2 mr-2"><i class="fa fa-filter"></i> Filter</button>
                         @if($filter === 'bulanan' || $filter === 'tahunan')
-                        <a href="{{ route('admin.absensi.export', request()->all()) }}" class="btn btn-success mb-2 ml-2">
+                        <a href="{{ route('admin.absensi.export', array_merge(request()->all(), ['filter'=>$filter,'bulan'=>$bulan,'tahun'=>$tahun])) }}" class="btn btn-success mb-2 ml-2">
                             <i class="fas fa-file-excel"></i> Export Excel
                         </a>
                         @endif

@@ -11,20 +11,20 @@
                     <h4 class="mb-0 font-weight-bold" style="color:#6c63ff">Daftar Mahasantri</h4>
                     <a href="{{ route('admin.mahasantri.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah Mahasantri</a>
                 </div>
-                <form method="GET" class="form-inline mb-3" style="padding-left: 1rem; padding-right: 1rem;">
-                    <div class="form-group mr-3 mb-2">
-                        <label for="filter_semester" class="mr-2 mb-0">Semester</label>
+                <form method="GET" class="mb-3 d-flex flex-wrap align-items-end gap-2">
+                    <div class="form-group mb-0 mr-2">
+                        <label for="filter_semester" class="mb-0">Semester</label>
                         <input type="text" name="semester" id="filter_semester" class="form-control form-control-sm" value="{{ request('semester') }}" placeholder="Semester">
                     </div>
-                    <div class="form-group mr-3 mb-2">
-                        <label for="filter_status_lulus" class="mr-2 mb-0">Status Lulus</label>
+                    <div class="form-group mb-0 mr-2">
+                        <label for="filter_status_lulus" class="mb-0">Status Lulus</label>
                         <select name="status_lulus" id="filter_status_lulus" class="form-control form-control-sm">
                             <option value="">Semua</option>
                             <option value="belum" {{ request('status_lulus') == 'belum' ? 'selected' : '' }}>Belum Lulus</option>
                             <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm mb-2">Filter</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
                 </form>
                 <div class="table-responsive px-4 pb-4">
                     <table class="table table-striped table-hover w-100" style="min-width:100%">
@@ -91,4 +91,71 @@
             </div>
         </div>
     </div>
+    <style>
+        /* Responsive filter form */
+        form.mb-3.d-flex.flex-wrap.align-items-end.gap-2 {
+            gap: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            form.mb-3.d-flex.flex-wrap.align-items-end.gap-2 {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            form.mb-3.d-flex.flex-wrap.align-items-end.gap-2 .form-group {
+                width: 100%;
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem !important;
+            }
+            form.mb-3.d-flex.flex-wrap.align-items-end.gap-2 button {
+                width: 100%;
+            }
+        }
+        /* Table style improvements */
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+        .table th {
+            background: #f8f9fa;
+            color: #4f4f4f;
+            font-weight: 600;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f6f8fa;
+        }
+        .badge-success {
+            background: #28a745 !important;
+        }
+        .badge-warning {
+            background: #ffc107 !important;
+            color: #212529 !important;
+        }
+        .badge-danger {
+            background: #dc3545 !important;
+        }
+        .btn-warning {
+            color: #fff;
+            background: #f0ad4e;
+            border: none;
+        }
+        .btn-warning:hover {
+            background: #ec971f;
+        }
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+        }
+        .btn-danger:hover {
+            background: #b52a37;
+        }
+        .btn-success {
+            background: #28a745;
+            border: none;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+    </style>
 </x-app-layout>

@@ -11,20 +11,20 @@
                     <h4 class="mb-0 font-weight-bold" style="color:#6c63ff">Daftar Mahasantri</h4>
                     <a href="{{ route('admin.mahasantri.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah Mahasantri</a>
                 </div>
-                <form method="GET" class="form-inline mb-3" style="padding-left: 1rem; padding-right: 1rem;">
-                    <div class="form-group mr-3 mb-2">
-                        <label for="filter_semester" class="mr-2 mb-0">Semester</label>
+                <form method="GET" class="mb-3 d-flex flex-wrap align-items-end gap-2">
+                    <div class="form-group mb-0 mr-2">
+                        <label for="filter_semester" class="mb-0">Semester</label>
                         <input type="text" name="semester" id="filter_semester" class="form-control form-control-sm" value="{{ request('semester') }}" placeholder="Semester">
                     </div>
-                    <div class="form-group mr-3 mb-2">
-                        <label for="filter_status_lulus" class="mr-2 mb-0">Status Lulus</label>
+                    <div class="form-group mb-0 mr-2">
+                        <label for="filter_status_lulus" class="mb-0">Status Lulus</label>
                         <select name="status_lulus" id="filter_status_lulus" class="form-control form-control-sm">
                             <option value="">Semua</option>
                             <option value="belum" {{ request('status_lulus') == 'belum' ? 'selected' : '' }}>Belum Lulus</option>
                             <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm mb-2">Filter</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
                 </form>
                 <div class="table-responsive px-4 pb-4">
                     <table class="table table-striped table-hover w-100" style="min-width:100%">
@@ -92,3 +92,107 @@
         </div>
     </div>
 </x-app-layout>
+
+@push('styles')
+    <style>
+        /* Stisla-style filter form */
+        form.mb-3.d-flex.flex-wrap.align-items-end.gap-2 {
+            gap: 0.5rem;
+            margin-bottom: 1.5rem !important;
+        }
+        form.mb-3 .form-group label {
+            font-size: 13px;
+            color: #34395e;
+            font-weight: 500;
+        }
+        form.mb-3 .form-control {
+            border-radius: 0.3rem;
+            border: 1px solid #e4e6fc;
+            font-size: 13px;
+            padding: 0.35rem 0.75rem;
+        }
+        form.mb-3 .btn-primary {
+            background: #6777ef;
+            border: none;
+            font-size: 13px;
+            padding: 0.35rem 1.2rem;
+            border-radius: 0.3rem;
+        }
+        form.mb-3 .btn-primary:hover {
+            background: #394eea;
+        }
+        @media (max-width: 768px) {
+            form.mb-3.d-flex.flex-wrap.align-items-end.gap-2 {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            form.mb-3 .form-group {
+                width: 100%;
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem !important;
+            }
+            form.mb-3 .btn {
+                width: 100%;
+            }
+        }
+        /* Table style improvements for Stisla */
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+        .table th {
+            background: #f9f9f9;
+            color: #34395e;
+            font-weight: 600;
+            border-top: 1px solid #e4e6fc;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #fcfcfd;
+        }
+        .badge-success {
+            background: #63ed7a !important;
+            color: #fff !important;
+        }
+        .badge-warning {
+            background: #ffa426 !important;
+            color: #fff !important;
+        }
+        .badge-danger {
+            background: #fc544b !important;
+            color: #fff !important;
+        }
+        .btn-warning {
+            color: #fff;
+            background: #ffa426;
+            border: none;
+        }
+        .btn-warning:hover {
+            background: #ff930f;
+        }
+        .btn-danger {
+            background: #fc544b;
+            border: none;
+        }
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        .btn-success {
+            background: #63ed7a;
+            border: none;
+        }
+        .btn-success:hover {
+            background: #43c463;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .card, .bg-white.rounded.shadow-sm.p-0 {
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(76,87,125,.07);
+            border: 1px solid #e4e6fc;
+        }
+        .card-header, .d-flex.justify-content-between.align-items-center.px-4.pt-4.pb-2 {
+            background: #f9f9f9;
+            border-bottom: 1px solid #e4e6fc;
+        }
+    </style>
+@endpush

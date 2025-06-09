@@ -69,6 +69,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         // Hapus libur route
         Route::get('/absensi/hapus-libur', [AbsensiController::class, 'hapusLibur'])->name('absensi.hapusLibur');
+
+        // UKT Payment routes
+        Route::resource('ukt', \App\Http\Controllers\UktPaymentController::class);
     });
 
     // User Management Routes

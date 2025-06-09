@@ -8,14 +8,14 @@ class UktPayment extends Model
 {
     protected $fillable = [
         'mahasantri_id',
-        'amount',
-        'payment_date',
+        'jumlah',
+        'tanggal_bayar',
         'status',
-        'period',
+        'periode',
     ];
 
     protected $casts = [
-        'payment_date' => 'date',
+        'tanggal_bayar' => 'date',
     ];
 
     public function mahasantri()

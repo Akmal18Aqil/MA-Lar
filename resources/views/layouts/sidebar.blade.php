@@ -37,6 +37,10 @@
                 <li class="{{ Request::is('admin/users') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i><span>Users</span></a>
                 </li>
+                <li class="menu-header">Manajemen UKT</li>
+                <li class="{{ Request::is('admin/ukt*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('admin.ukt.index') }}"><i class="fa fa-money"></i><span>Manajemen UKT</span></a>
+                </li>
             @elseif($role === 'dosen')
                 <li class="menu-header">Dashboard</li>
                 <li class="{{ Request::is('dosen/dashboard') ? 'active' : '' }}">

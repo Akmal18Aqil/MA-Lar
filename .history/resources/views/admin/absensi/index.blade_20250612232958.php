@@ -37,7 +37,6 @@
                                 <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
                             </select>
                         </div>
-                        @if(request()->has('filter') || request()->has('export_fields'))
                         <div class="form-group mb-2 mr-2 flex-grow-1">
                             <label for="filter_kegiatan" class="mb-0 d-block">Filter Kegiatan</label>
                             <select name="filter_kegiatan[]" id="filter_kegiatan" class="form-control form-control-sm w-100" multiple style="min-height:110px">
@@ -49,6 +48,7 @@
                             </select>
                             <small class="text-muted d-block mt-1">Tekan <b>Ctrl</b> (atau <b>Cmd</b>) untuk memilih lebih dari satu kegiatan</small>
                         </div>
+                        @if(request()->has('filter') || request()->has('export_fields'))
                         <div class="form-group mb-2 mr-2 flex-grow-1">
                             <label for="export_fields" class="mb-0 d-block">Kolom Export</label>
                             <div class="input-group">
@@ -152,13 +152,8 @@
                                             <td colspan="{{ count($exportFields) }}" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
                                         @else
                                             @foreach($exportFields as $field)
-                                                @if($field == 'terlambat')
-                                                    {{-- Kolom T: Untuk sholat jamaah ambil terlambat_sholat, pengajian ambil terlambat, lain-lain ambil terlambat --}}
-                                                    @if($k->jenis == 'sholat_jamaah')
-                                                        <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
-                                                    @else
-                                                        <td>{{ $rekap['terlambat'] ?? 0 }}</td>
-                                                    @endif
+                                                @if($k->jenis == 'sholat_jamaah' && $field == 'terlambat')
+                                                    <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
                                                 @else
                                                     <td>{{ $rekap[$field] ?? 0 }}</td>
                                                 @endif

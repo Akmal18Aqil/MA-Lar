@@ -37,7 +37,6 @@
                                 <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
                             </select>
                         </div>
-                        @if(request()->has('filter') || request()->has('export_fields'))
                         <div class="form-group mb-2 mr-2 flex-grow-1">
                             <label for="filter_kegiatan" class="mb-0 d-block">Filter Kegiatan</label>
                             <select name="filter_kegiatan[]" id="filter_kegiatan" class="form-control form-control-sm w-100" multiple style="min-height:110px">
@@ -49,6 +48,7 @@
                             </select>
                             <small class="text-muted d-block mt-1">Tekan <b>Ctrl</b> (atau <b>Cmd</b>) untuk memilih lebih dari satu kegiatan</small>
                         </div>
+                        @if(request()->has('filter') || request()->has('export_fields'))
                         <div class="form-group mb-2 mr-2 flex-grow-1">
                             <label for="export_fields" class="mb-0 d-block">Kolom Export</label>
                             <div class="input-group">
@@ -152,13 +152,8 @@
                                             <td colspan="{{ count($exportFields) }}" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
                                         @else
                                             @foreach($exportFields as $field)
-                                                @if($field == 'terlambat')
-                                                    {{-- Kolom T: Untuk sholat jamaah ambil terlambat_sholat, pengajian ambil terlambat, lain-lain ambil terlambat --}}
-                                                    @if($k->jenis == 'sholat_jamaah')
-                                                        <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
-                                                    @else
-                                                        <td>{{ $rekap['terlambat'] ?? 0 }}</td>
-                                                    @endif
+                                                @if($k->jenis == 'sholat_jamaah' && $field == 'terlambat')
+                                                    <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
                                                 @else
                                                     <td>{{ $rekap[$field] ?? 0 }}</td>
                                                 @endif
@@ -187,78 +182,8 @@
                         @php
                             // Pastikan $liburKegiatan selalu terdefinisi
                             $liburKegiatan = $liburKegiatan ?? [];
-                            // Samakan logika $uniqueKegiatan dengan rekap (bulanan/tahunan)
-                            $uniqueKegiatan = collect($kegiatan)
-                                ->when(request('filter_kegiatan'), function($q) {
-                                    $q = $q->whereIn('id', (array)request('filter_kegiatan'));
-                                    return $q;
-                                })
-                                ->unique(function($item) {
-                                    return $item->nama_kegiatan . '-' . $item->jenis;
-                                });
                         @endphp
-                        <table class="table table-striped table-hover w-100" style="min-width:100%">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th style="width:40px">NIM</th>
-                                    <th>Nama Mahasantri</th>
-                                    @foreach($uniqueKegiatan as $k)
-                                        <th>{{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span></th>
-                                    @endforeach
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($mahasantris as $m)
-                                <tr>
-                                    <td>{{ $m->nim }}</td>
-                                    <td>{{ $m->nama_lengkap }}</td>
-                                    @foreach($uniqueKegiatan as $k)
-                                        @php
-                                            $isLibur = is_array($liburKegiatan) && collect($kegiatan)->first(function($kg) use ($k, $liburKegiatan) {
-                                                return $kg->nama_kegiatan == $k->nama_kegiatan && $kg->jenis == $k->jenis && is_array($liburKegiatan) && in_array($kg->id, $liburKegiatan);
-                                            });
-                                            $absen = $absensi->first(function($a) use ($m, $k, $kegiatan) {
-                                                // Cari id kegiatan yang cocok nama dan jenisnya
-                                                $keg = collect($kegiatan)->first(function($kg) use ($k) {
-                                                    return $kg->nama_kegiatan == $k->nama_kegiatan && $kg->jenis == $k->jenis;
-                                                });
-                                                return $a->mahasantri_id == $m->id && $keg && $a->kegiatan_id == $keg->id;
-                                            });
-                                        @endphp
-                                        <td>
-                                            @if($isLibur)
-                                                <span class="badge badge-danger">Libur</span>
-                                            @elseif($absen)
-                                                <div class="d-flex align-items-center" style="gap:2px;">
-                                                    <span class="badge badge-{{ $absen->status == 'hadir' ? 'success' : ($absen->status == 'alfa' ? 'danger' : 'warning') }}">{{ ucfirst($absen->status) }}</span>
-                                                    @if($k->jenis == 'pengajian' && !empty($absen->is_late))
-                                                        <span class="badge badge-warning ml-1">Terlambat</span>
-                                                    @endif
-                                                    @if($k->jenis == 'sholat_jamaah')
-                                                        @if($absen->status == 'hadir')
-                                                            <span class="badge badge-success ml-1">Jama'ah</span>
-                                                        @endif
-                                                        @if(!empty($absen->is_late))
-                                                            <span class="badge badge-warning ml-1">Terlambat Sholat</span>
-                                                        @endif
-                                                    @endif
-                                                    <form action="{{ route('admin.absensi.destroy', $absen->id) }}" method="POST" class="d-inline m-0 p-0">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline" style="color:#dc3545; margin-left:2px;" title="Hapus" onclick="return confirm('Yakin hapus absensi?')">
-                                                            <i class="fa fa-trash fa-xs"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                    @endforeach
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        {{-- Tabel harian dihilangkan sesuai permintaan --}}
                     @endif
                 </div>
             </div>

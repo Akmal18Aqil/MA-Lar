@@ -29,6 +29,7 @@ class AbsensiController extends Controller
                 $q->where('status_lulus', $request->status_lulus);
             })
             ->get();
+        // Ambil hanya satu kegiatan unik untuk setiap kombinasi nama_kegiatan dan jenis
         $kegiatan = Kegiatan::all()->unique(function($item) {
             return $item->nama_kegiatan . '-' . $item->jenis;
         })->values();
@@ -67,26 +68,16 @@ class AbsensiController extends Controller
                     $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
                 }
                 $kegiatanObj = $kegiatan->firstWhere('id', $a->kegiatan_id);
-                // Pastikan field jenis_kegiatan dan jenis konsisten
-                $jenis = $kegiatanObj->jenis_kegiatan ?? $kegiatanObj->jenis ?? null;
-                if ($jenis == 'sholat_jamaah') {
+                if ($kegiatanObj && $kegiatanObj->jenis_kegiatan == 'sholat_jamaah') {
                     $nama = strtolower($kegiatanObj->nama_kegiatan);
                     if (strpos($nama, 'subuh') !== false) $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['sholat_subuh']++;
                     if (strpos($nama, 'dzuhur') !== false) $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['sholat_dzuhur']++;
                     if (strpos($nama, 'ashar') !== false) $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['sholat_ashar']++;
                     if (strpos($nama, 'maghrib') !== false) $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['sholat_maghrib']++;
                     if (strpos($nama, 'isya') !== false) $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['sholat_isya']++;
-                    // Hanya status hadir dan is_late yang dihitung untuk keterlambatan sholat
-                    if ($a->status === 'hadir' && ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on')) {
-                        $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
-                    }
+                    if ($a->is_late) $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
                 }
-                if (
-                    isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]) &&
-                    $a->status === 'hadir' &&
-                    ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on') &&
-                    $jenis === 'pengajian'
-                ) {
+                if (isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
                     $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
                 }
             }
@@ -116,24 +107,16 @@ class AbsensiController extends Controller
                     $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
                 }
                 $kegiatanObj = $kegiatan->firstWhere('id', $a->kegiatan_id);
-                $jenis = $kegiatanObj->jenis_kegiatan ?? $kegiatanObj->jenis ?? null;
-                if ($jenis == 'sholat_jamaah') {
+                if ($kegiatanObj && $kegiatanObj->jenis_kegiatan == 'sholat_jamaah') {
                     $nama = strtolower($kegiatanObj->nama_kegiatan);
                     if (strpos($nama, 'subuh') !== false) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['sholat_subuh']++;
                     if (strpos($nama, 'dzuhur') !== false) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['sholat_dzuhur']++;
                     if (strpos($nama, 'ashar') !== false) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['sholat_ashar']++;
                     if (strpos($nama, 'maghrib') !== false) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['sholat_maghrib']++;
                     if (strpos($nama, 'isya') !== false) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['sholat_isya']++;
-                    if ($a->status === 'hadir' && ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on')) {
-                        $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
-                    }
+                    if ($a->is_late) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
                 }
-                if (
-                    isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]) &&
-                    $a->status === 'hadir' &&
-                    ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on') &&
-                    $jenis === 'pengajian'
-                ) {
+                if (isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
                     $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
                 }
             }
@@ -267,6 +250,7 @@ class AbsensiController extends Controller
                 $q->where('status_lulus', $request->status_lulus);
             })
             ->get();
+        // Ambil hanya satu kegiatan unik untuk setiap kombinasi nama_kegiatan dan jenis
         $kegiatan = Kegiatan::all()->unique(function($item) {
             return $item->nama_kegiatan . '-' . $item->jenis;
         })->values();

@@ -153,9 +153,10 @@
                                         @else
                                             @foreach($exportFields as $field)
                                                 @if($field == 'terlambat')
-                                                    {{-- Kolom T: Untuk sholat jamaah ambil terlambat_sholat, pengajian ambil terlambat, lain-lain ambil terlambat --}}
                                                     @if($k->jenis == 'sholat_jamaah')
                                                         <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
+                                                    @elseif($k->jenis == 'pengajian')
+                                                        <td>{{ $rekap['terlambat'] ?? 0 }}</td>
                                                     @else
                                                         <td>{{ $rekap['terlambat'] ?? 0 }}</td>
                                                     @endif

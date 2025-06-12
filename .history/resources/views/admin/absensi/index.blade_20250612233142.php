@@ -152,13 +152,8 @@
                                             <td colspan="{{ count($exportFields) }}" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
                                         @else
                                             @foreach($exportFields as $field)
-                                                @if($field == 'terlambat')
-                                                    {{-- Kolom T: Untuk sholat jamaah ambil terlambat_sholat, pengajian ambil terlambat, lain-lain ambil terlambat --}}
-                                                    @if($k->jenis == 'sholat_jamaah')
-                                                        <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
-                                                    @else
-                                                        <td>{{ $rekap['terlambat'] ?? 0 }}</td>
-                                                    @endif
+                                                @if($k->jenis == 'sholat_jamaah' && $field == 'terlambat')
+                                                    <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
                                                 @else
                                                     <td>{{ $rekap[$field] ?? 0 }}</td>
                                                 @endif

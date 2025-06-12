@@ -152,13 +152,20 @@
                                             <td colspan="{{ count($exportFields) }}" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
                                         @else
                                             @foreach($exportFields as $field)
-                                                @if($field == 'terlambat')
-                                                    {{-- Kolom T: Untuk sholat jamaah ambil terlambat_sholat, pengajian ambil terlambat, lain-lain ambil terlambat --}}
-                                                    @if($k->jenis == 'sholat_jamaah')
-                                                        <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
-                                                    @else
-                                                        <td>{{ $rekap['terlambat'] ?? 0 }}</td>
-                                                    @endif
+                                                @if($k->jenis == 'sholat_jamaah' && $field == 'terlambat')
+                                                    <td>
+                                                        {{ $rekap['terlambat_sholat'] ?? 0 }}
+                                                        @if(($rekap['terlambat_sholat'] ?? 0) > 0)
+                                                            <span class="badge badge-warning ml-1">Terlambat Sholat</span>
+                                                        @endif
+                                                    </td>
+                                                @elseif($k->jenis == 'pengajian' && $field == 'terlambat')
+                                                    <td>
+                                                        {{ $rekap['terlambat'] ?? 0 }}
+                                                        @if(($rekap['terlambat'] ?? 0) > 0)
+                                                            <span class="badge badge-warning ml-1">Terlambat</span>
+                                                        @endif
+                                                    </td>
                                                 @else
                                                     <td>{{ $rekap[$field] ?? 0 }}</td>
                                                 @endif

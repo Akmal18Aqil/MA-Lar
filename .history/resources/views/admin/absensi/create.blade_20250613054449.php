@@ -59,9 +59,6 @@
                                                         @if($selectedKegiatan && $kegiatan->where('id', $selectedKegiatan)->first() && in_array($kegiatan->where('id', $selectedKegiatan)->first()->jenis, ['pengajian','sholat_jamaah']))
                                                             <th>Terlambat?</th>
                                                         @endif
-                                                        @if($selectedKegiatan && $kegiatan->where('id', $selectedKegiatan)->first() && $kegiatan->where('id', $selectedKegiatan)->first()->jenis == 'sholat_jamaah')
-                                                            <th>Tidak Shaf 1?</th>
-                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -86,12 +83,6 @@
                                                         @if($selectedKegiatan && $kegiatan->where('id', $selectedKegiatan)->first() && in_array($kegiatan->where('id', $selectedKegiatan)->first()->jenis, ['pengajian','sholat_jamaah']))
                                                             <td>
                                                                 <input type="checkbox" name="is_late[{{ $m->id }}]" value="1">
-                                                            </td>
-                                                        @endif
-                                                        @if($selectedKegiatan && $kegiatan->where('id', $selectedKegiatan)->first() && $kegiatan->where('id', $selectedKegiatan)->first()->jenis == 'sholat_jamaah')
-                                                            <td>
-                                                                <input type="checkbox" name="is_shaf_pertama[{{ $m->id }}]" value="1">
-                                                                <small class="text-muted">Centang jika <b>TIDAK</b> shaf pertama</small>
                                                             </td>
                                                         @endif
                                                     </tr>

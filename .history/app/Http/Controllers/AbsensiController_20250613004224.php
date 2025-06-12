@@ -40,6 +40,12 @@ class AbsensiController extends Controller
         } elseif ($filter === 'tahunan') {
             $absensi = $absensi->whereYear('tanggal', $tahun);
         }
+
+        // Apply filter for is_shaf_pertama if requested and filter is harian
+        if ($filter === 'harian' && $request->filled('filter_shaf_pertama') && $request->input('filter_shaf_pertama') == '1') {
+            $absensi = $absensi->where('is_shaf_pertama', 1);
+        }
+
         $absensi = $absensi->get();
 
         // Untuk filter bulanan: hitung jumlah absensi per mahasantri per kegiatan per status
@@ -81,7 +87,7 @@ class AbsensiController extends Controller
                     if ($a->status === 'hadir' && ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on')) {
                         $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
                     }
-                    // Hitung tidak shaf pertama untuk sholat jamaah
+                    // Hitung shaf pertama untuk sholat jamaah
                     if ($a->status === 'hadir' && ($a->is_shaf_pertama == 1 || $a->is_shaf_pertama === true || $a->is_shaf_pertama === '1' || $a->is_shaf_pertama === 'on')) {
                          $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['shaf_pertama']++;
                     }
@@ -133,7 +139,7 @@ class AbsensiController extends Controller
                     if ($a->status === 'hadir' && ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on')) {
                         $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
                     }
-                     // Hitung tidak shaf pertama untuk sholat jamaah
+                     // Hitung shaf pertama untuk sholat jamaah
                     if ($a->status === 'hadir' && ($a->is_shaf_pertama == 1 || $a->is_shaf_pertama === true || $a->is_shaf_pertama === '1' || $a->is_shaf_pertama === 'on')) {
                          $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['shaf_pertama']++;
                     }
@@ -277,7 +283,7 @@ class AbsensiController extends Controller
         $tahun = $request->input('tahun', now()->format('Y'));
         $exportFields = $request->input('export_fields');
         if (!$exportFields || !is_array($exportFields) || count($exportFields) === 0) {
-            $exportFields = ['hadir','izin','sakit','alfa','terlambat'];
+            $exportFields = ['hadir','izin','sakit','alfa','terlambat', 'shaf_pertama']; // Tambahkan shaf_pertama ke default export
         }
 
         // Terapkan filter semester dan status_lulus
@@ -311,6 +317,7 @@ class AbsensiController extends Controller
                     'sakit' => 0,
                     'alfa' => 0,
                     'terlambat' => 0,
+                    'shaf_pertama' => 0, // Tambahkan shaf_pertama ke rekap export
                 ];
             }
         }
@@ -320,6 +327,10 @@ class AbsensiController extends Controller
             }
             if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
                 $rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
+            }
+             // Hitung shaf pertama untuk export
+            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id]) && ($a->is_shaf_pertama == 1 || $a->is_shaf_pertama === true || $a->is_shaf_pertama === '1' || $a->is_shaf_pertama === 'on')) {
+                 $rekap[$a->mahasantri_id][$a->kegiatan_id]['shaf_pertama']++;
             }
         }
         // Filter kegiatan sesuai filter_kegiatan jika ada

@@ -59,7 +59,6 @@ class AbsensiController extends Controller
                         'sholat_maghrib' => 0,
                         'sholat_isya' => 0,
                         'terlambat_sholat' => 0,
-                        'shaf_pertama' => 0, // Tambah field shaf_pertama
                     ];
                 }
             }
@@ -80,10 +79,6 @@ class AbsensiController extends Controller
                     // Hanya status hadir dan is_late yang dihitung untuk keterlambatan sholat
                     if ($a->status === 'hadir' && ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on')) {
                         $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
-                    }
-                    // Hitung tidak shaf pertama untuk sholat jamaah
-                    if ($a->status === 'hadir' && ($a->is_shaf_pertama == 1 || $a->is_shaf_pertama === true || $a->is_shaf_pertama === '1' || $a->is_shaf_pertama === 'on')) {
-                         $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['shaf_pertama']++;
                     }
                 }
                 if (
@@ -113,7 +108,6 @@ class AbsensiController extends Controller
                         'sholat_maghrib' => 0,
                         'sholat_isya' => 0,
                         'terlambat_sholat' => 0,
-                        'shaf_pertama' => 0, // Tambah field shaf_pertama
                     ];
                 }
             }
@@ -132,10 +126,6 @@ class AbsensiController extends Controller
                     if (strpos($nama, 'isya') !== false) $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['sholat_isya']++;
                     if ($a->status === 'hadir' && ($a->is_late == 1 || $a->is_late === true || $a->is_late === '1' || $a->is_late === 'on')) {
                         $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat_sholat']++;
-                    }
-                     // Hitung tidak shaf pertama untuk sholat jamaah
-                    if ($a->status === 'hadir' && ($a->is_shaf_pertama == 1 || $a->is_shaf_pertama === true || $a->is_shaf_pertama === '1' || $a->is_shaf_pertama === 'on')) {
-                         $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['shaf_pertama']++;
                     }
                 }
                 if (

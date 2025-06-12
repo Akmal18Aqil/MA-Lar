@@ -37,6 +37,10 @@
                                 <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
                             </select>
                         </div>
+                        <div class="form-group mb-2 mr-2 flex-grow-1 form-check">
+                            <input type="checkbox" class="form-check-input" id="filter_shaf_pertama" name="filter_shaf_pertama" value="1" {{ request('filter_shaf_pertama') == '1' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="filter_shaf_pertama">Tidak Shaf 1</label>
+                        </div>
                         @if(request()->has('filter') || request()->has('export_fields'))
                         <div class="form-group mb-2 mr-2 flex-grow-1">
                             <label for="filter_kegiatan" class="mb-0 d-block">Filter Kegiatan</label>

@@ -58,7 +58,6 @@
                                     <option value="sakit" {{ in_array('sakit', (array)request('export_fields', [])) ? 'selected' : '' }}>Sakit</option>
                                     <option value="alfa" {{ in_array('alfa', (array)request('export_fields', [])) ? 'selected' : '' }}>Alfa</option>
                                     <option value="terlambat" {{ in_array('terlambat', (array)request('export_fields', [])) ? 'selected' : '' }}>Terlambat</option>
-                                    <option value="shaf_pertama" {{ in_array('shaf_pertama', (array)request('export_fields', [])) ? 'selected' : '' }}>T Shaf</option>
                                 </select>
                             </div>
                             <small class="text-muted d-block mt-1">Tekan <b>Ctrl</b> (atau <b>Cmd</b>) untuk memilih lebih dari satu kolom</small>
@@ -134,13 +133,7 @@
                                 <tr>
                                     @foreach($uniqueKegiatan as $k)
                                         @foreach($exportFields as $field)
-                                            <th class="text-center">
-                                                @if($field == 'shaf_pertama')
-                                                    TS
-                                                @else
-                                                    {{ strtoupper(substr($field,0,1)) }}
-                                                @endif
-                                            </th>
+                                            <th class="text-center">{{ strtoupper(substr($field,0,1)) }}</th>
                                         @endforeach
                                     @endforeach
                                 </tr>
@@ -165,12 +158,6 @@
                                                         <td>{{ $rekap['terlambat_sholat'] ?? 0 }}</td>
                                                     @else
                                                         <td>{{ $rekap['terlambat'] ?? 0 }}</td>
-                                                    @endif
-                                                @elseif($field == 'shaf_pertama')
-                                                    @if($k->jenis == 'sholat_jamaah')
-                                                        <td>{{ $rekap['shaf_pertama'] ?? 0 }}</td>
-                                                    @else
-                                                        <td>-</td>
                                                     @endif
                                                 @else
                                                     <td>{{ $rekap[$field] ?? 0 }}</td>

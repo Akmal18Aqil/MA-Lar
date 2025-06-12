@@ -41,7 +41,7 @@ class UktPaymentController extends Controller
                 $bulanBayar = $start->copy()->addMonths($i);
                 \App\Models\UktPayment::create([
                     'mahasantri_id' => $validated['mahasantri_id'],
-                    'jumlah' => 350000, // per bulan 350rb, total 2.100.000 jika 6 bulan
+                    'jumlah' => 250000, // asumsikan per bulan 250rb, total 1.5jt
                     'tanggal_bayar' => $bulanBayar->format('Y-m-d'),
                     'status' => 'lunas',
                     'periode' => $periode,

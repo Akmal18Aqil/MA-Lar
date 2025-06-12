@@ -12,7 +12,7 @@
                     $dashboardRoute = route('mahasantri.dashboard');
                 }
             @endphp
-            <a href="{{ $dashboardRoute }}" class="sidebar-title-text">SIAKAD</a>
+            <a href="{{ $dashboardRoute }}">SIAKAD</a>
             <a href="#" class="nav-link nav-link-lg collapse-btn toggle-sidebar" id="sidebarToggle" title="Minimize Sidebar">
                 <i class="fa fa-bars"></i>
             </a>
@@ -78,11 +78,6 @@
         </ul>
     </aside>
 </div>
-<style>
-    body.sidebar-mini .sidebar-title-text {
-        display: none !important;
-    }
-</style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var toggleBtn = document.getElementById('sidebarToggle');

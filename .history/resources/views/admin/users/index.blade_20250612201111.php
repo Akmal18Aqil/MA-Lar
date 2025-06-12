@@ -39,15 +39,11 @@
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->role }}</td>
                                                 <td>
-                                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning mb-1 mb-md-0" title="Edit">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
+                                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning mb-1 mb-md-0">Edit</a>
                                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger mb-1 mb-md-0" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
+                                                        <button type="submit" class="btn btn-sm btn-danger mb-1 mb-md-0" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
                                                     </form>
                                                 </td>
                                             </tr>

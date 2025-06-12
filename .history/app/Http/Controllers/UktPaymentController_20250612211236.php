@@ -31,25 +31,7 @@ class UktPaymentController extends Controller
             'status' => 'required|in:lunas,belum_lunas,tunggakan',
             'periode' => 'required|string',
         ]);
-        // Jika jumlah 1500000, buat pembayaran lunas untuk seluruh bulan di semester (asumsi 6 bulan)
-        if ($validated['jumlah'] == 1500000) {
-            $periode = $validated['periode'];
-            $tanggalBayar = $validated['tanggal_bayar'];
-            // Asumsi semester = 6 bulan, mulai dari bulan pembayaran
-            $start = \Carbon\Carbon::parse($tanggalBayar)->startOfMonth();
-            for ($i = 0; $i < 6; $i++) {
-                $bulanBayar = $start->copy()->addMonths($i);
-                \App\Models\UktPayment::create([
-                    'mahasantri_id' => $validated['mahasantri_id'],
-                    'jumlah' => 350000, // per bulan 350rb, total 2.100.000 jika 6 bulan
-                    'tanggal_bayar' => $bulanBayar->format('Y-m-d'),
-                    'status' => 'lunas',
-                    'periode' => $periode,
-                ]);
-            }
-            return redirect()->route('admin.ukt.index')->with('success', 'Pembayaran UKT semester lunas untuk 6 bulan!');
-        }
-        \App\Models\UktPayment::create([
+        UktPayment::create([
             'mahasantri_id' => $validated['mahasantri_id'],
             'jumlah' => $validated['jumlah'],
             'tanggal_bayar' => $validated['tanggal_bayar'],

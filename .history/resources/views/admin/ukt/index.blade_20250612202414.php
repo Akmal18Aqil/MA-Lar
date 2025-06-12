@@ -14,14 +14,9 @@
                 @if(session('success'))
                     <div class="alert alert-success mx-4">{{ session('success') }}</div>
                 @endif
-                <form method="GET" action="" class="d-flex flex-wrap align-items-center gap-2 px-4 pb-2" style="gap: 12px !important;">
-                    <input type="text" name="semester" class="form-control form-control-sm mr-2 mb-2" placeholder="Semester" value="{{ request('semester') }}" style="max-width:120px;">
-                    <input type="number" name="bulan" min="1" max="12" class="form-control form-control-sm mr-2 mb-2" placeholder="Bulan (1-12)" value="{{ request('bulan') }}" style="max-width:120px;">
-                    <input type="number" name="tahun" min="2020" class="form-control form-control-sm mr-2 mb-2" placeholder="Tahun" value="{{ request('tahun') }}" style="max-width:120px;">
-                    <button type="submit" class="btn btn-primary btn-sm mb-2" style="margin-right:8px;"><i class="fa fa-filter"></i> Filter</button>
-                    <a href="{{ route('admin.ukt.export', array_filter(['semester' => request('semester'), 'bulan' => request('bulan'), 'tahun' => request('tahun')])) }}" class="btn btn-success btn-sm mb-2 {{ !request('semester') && !request('bulan') && !request('tahun') ? 'disabled' : '' }}" @if(!request('semester') && !request('bulan') && !request('tahun')) onclick="return false;" @endif style="margin-right:8px;">
-                        <i class="fas fa-file-excel"></i> Export Rekap UKT
-                    </a>
+                <form method="GET" action="{{ route('admin.ukt.export') }}" class="d-flex flex-wrap align-items-center gap-2 px-4 pb-2">
+                    <input type="text" name="semester" class="form-control form-control-sm mr-2 mb-2" placeholder="Semester" required style="max-width:150px;">
+                    <button type="submit" class="btn btn-success btn-sm mb-2"><i class="fas fa-file-excel"></i> Export Rekap UKT Semester</button>
                 </form>
                 <div class="table-responsive px-4 pb-4">
                     <table class="table table-striped table-hover w-100" style="min-width:100%">
@@ -29,38 +24,20 @@
                             <tr>
                                 <th style="width:40px">#</th>
                                 <th>Nama Mahasantri</th>
-                                <th>Semester</th>
                                 <th>Jumlah</th>
                                 <th>Tanggal Bayar</th>
                                 <th>Status</th>
+                                <th>Periode</th>
                                 <th style="width:150px">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $semesterFilter = request('semester');
-                                $bulanFilter = request('bulan');
-                                $tahunFilter = request('tahun');
-                                $allMahasantri = \App\Models\Mahasantri::with(['uktPayments' => function($q) use ($semesterFilter, $bulanFilter, $tahunFilter) {
-                                    if ($semesterFilter) {
-                                        $q->where('periode', $semesterFilter);
-                                    }
-                                    if ($bulanFilter) {
-                                        $q->whereMonth('tanggal_bayar', $bulanFilter);
-                                    }
-                                    if ($tahunFilter) {
-                                        $q->whereYear('tanggal_bayar', $tahunFilter);
-                                    }
-                                }])->when($semesterFilter, function($q) use ($semesterFilter) {
-                                    $q->where('semester', $semesterFilter);
-                                })->get();
-                            @endphp
+                            @php $allMahasantri = \App\Models\Mahasantri::with(['uktPayments' => function($q){ $q->where('periode', request('semester')); }])->get(); @endphp
                             @foreach($allMahasantri as $i => $m)
                                 @php $ukt = $m->uktPayments->first(); @endphp
                                 <tr>
                                     <td>{{ $i+1 }}</td>
                                     <td>{{ $m->nama_lengkap }}</td>
-                                    <td>{{ $m->semester }}</td>
                                     <td>{{ $ukt ? 'Rp '.number_format($ukt->jumlah,0,',','.') : '-' }}</td>
                                     <td>{{ $ukt ? \Carbon\Carbon::parse($ukt->tanggal_bayar)->format('d-m-Y') : '-' }}</td>
                                     <td>
@@ -74,6 +51,7 @@
                                             <span class="badge badge-secondary">Belum Bayar</span>
                                         @endif
                                     </td>
+                                    <td>{{ $ukt ? $ukt->periode : request('semester') }}</td>
                                     <td>
                                         @if($ukt)
                                             <a href="{{ route('admin.ukt.edit', $ukt->id) }}" class="btn btn-warning btn-icon btn-sm mr-1" title="Edit">
@@ -95,29 +73,10 @@
                         </tbody>
                     </table>
                     <div class="mt-2 d-flex justify-content-end">
-                        {{-- Hapus paginasi lama karena data diambil dari $allMahasantri --}}
+                        {{ $uktPayments->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <style>
-        @media (max-width: 767.98px) {
-            .table-responsive {
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }
-            .form-control, .btn {
-                width: 100% !important;
-                margin-bottom: 8px !important;
-            }
-            .d-flex.align-items-center.gap-2 {
-                flex-direction: column !important;
-                align-items: stretch !important;
-            }
-            .table th, .table td {
-                white-space: nowrap;
-            }
-        }
-    </style>
 </x-app-layout>

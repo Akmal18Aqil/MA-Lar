@@ -14,12 +14,12 @@
                 @if(session('success'))
                     <div class="alert alert-success mx-4">{{ session('success') }}</div>
                 @endif
-                <form method="GET" action="" class="d-flex flex-wrap align-items-center gap-2 px-4 pb-2" style="gap: 12px !important;">
+                <form method="GET" action="" class="d-flex flex-wrap align-items-center gap-2 px-4 pb-2">
                     <input type="text" name="semester" class="form-control form-control-sm mr-2 mb-2" placeholder="Semester" value="{{ request('semester') }}" style="max-width:120px;">
                     <input type="number" name="bulan" min="1" max="12" class="form-control form-control-sm mr-2 mb-2" placeholder="Bulan (1-12)" value="{{ request('bulan') }}" style="max-width:120px;">
                     <input type="number" name="tahun" min="2020" class="form-control form-control-sm mr-2 mb-2" placeholder="Tahun" value="{{ request('tahun') }}" style="max-width:120px;">
-                    <button type="submit" class="btn btn-primary btn-sm mb-2" style="margin-right:8px;"><i class="fa fa-filter"></i> Filter</button>
-                    <a href="{{ route('admin.ukt.export', array_filter(['semester' => request('semester'), 'bulan' => request('bulan'), 'tahun' => request('tahun')])) }}" class="btn btn-success btn-sm mb-2 {{ !request('semester') && !request('bulan') && !request('tahun') ? 'disabled' : '' }}" @if(!request('semester') && !request('bulan') && !request('tahun')) onclick="return false;" @endif style="margin-right:8px;">
+                    <button type="submit" class="btn btn-primary btn-sm mb-2"><i class="fa fa-filter"></i> Filter</button>
+                    <a href="{{ route('admin.ukt.export', array_filter(['semester' => request('semester'), 'bulan' => request('bulan'), 'tahun' => request('tahun')])) }}" class="btn btn-success btn-sm mb-2 {{ !request('semester') && !request('bulan') && !request('tahun') ? 'disabled' : '' }}" @if(!request('semester') && !request('bulan') && !request('tahun')) onclick="return false;" @endif>
                         <i class="fas fa-file-excel"></i> Export Rekap UKT
                     </a>
                 </form>
@@ -101,23 +101,4 @@
             </div>
         </div>
     </div>
-    <style>
-        @media (max-width: 767.98px) {
-            .table-responsive {
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }
-            .form-control, .btn {
-                width: 100% !important;
-                margin-bottom: 8px !important;
-            }
-            .d-flex.align-items-center.gap-2 {
-                flex-direction: column !important;
-                align-items: stretch !important;
-            }
-            .table th, .table td {
-                white-space: nowrap;
-            }
-        }
-    </style>
 </x-app-layout>

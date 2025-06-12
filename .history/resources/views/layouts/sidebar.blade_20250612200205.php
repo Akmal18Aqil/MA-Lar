@@ -79,8 +79,10 @@
     </aside>
 </div>
 <style>
-    body.sidebar-mini .sidebar-title-text {
-        display: none !important;
+    @media (max-width: 575.98px) {
+        body.sidebar-mini .sidebar-title-text {
+            display: none !important;
+        }
     }
 </style>
 <script>

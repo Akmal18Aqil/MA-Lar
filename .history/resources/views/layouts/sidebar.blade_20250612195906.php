@@ -12,10 +12,10 @@
                     $dashboardRoute = route('mahasantri.dashboard');
                 }
             @endphp
-            <a href="{{ $dashboardRoute }}" class="sidebar-title-text">SIAKAD</a>
-            <a href="#" class="nav-link nav-link-lg collapse-btn toggle-sidebar" id="sidebarToggle" title="Minimize Sidebar">
-                <i class="fa fa-bars"></i>
-            </a>
+            <a href="{{ $dashboardRoute }}">SIAKAD</a>
+            <button id="sidebarToggle" style="background:none;border:none;font-size:20px;cursor:pointer;" title="Minimize Sidebar">
+                <i class="fa fa-angle-double-left"></i>
+            </button>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ $dashboardRoute }}">SKD</a>
@@ -79,16 +79,33 @@
     </aside>
 </div>
 <style>
-    body.sidebar-mini .sidebar-title-text {
-        display: none !important;
+    .sidebar-collapsed {
+        width: 60px !important;
+        transition: width 0.2s;
+    }
+    .sidebar-collapsed .sidebar-brand span,
+    .sidebar-collapsed .sidebar-menu span {
+        display: none;
+    }
+    .sidebar-collapsed .sidebar-brand a {
+        font-size: 1.2rem;
     }
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var sidebar = document.getElementById('mainSidebar');
         var toggleBtn = document.getElementById('sidebarToggle');
-        toggleBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.body.classList.toggle('sidebar-mini');
+        toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-collapsed');
+            // Change icon direction
+            var icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                icon.classList.remove('fa-angle-double-left');
+                icon.classList.add('fa-angle-double-right');
+            } else {
+                icon.classList.remove('fa-angle-double-right');
+                icon.classList.add('fa-angle-double-left');
+            }
         });
     });
 </script>

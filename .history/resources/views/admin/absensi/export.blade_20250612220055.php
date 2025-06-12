@@ -54,11 +54,11 @@
                         $liburCount = $liburKegiatan->where('kegiatan_id', $k->id)->count();
                     }
                 @endphp
-                <td>{{ $r['hadir'] ?? 0 }}</td>
-                <td>{{ $r['izin'] ?? 0 }}</td>
-                <td>{{ $r['sakit'] ?? 0 }}</td>
-                <td>{{ $r['alfa'] ?? 0 }}</td>
-                <td>{{ $r['terlambat'] ?? 0 }}</td>
+                <td>{{ $r['hadir'] }}</td>
+                <td>{{ $r['izin'] }}</td>
+                <td>{{ $r['sakit'] }}</td>
+                <td>{{ $r['alfa'] }}</td>
+                <td>{{ $r['terlambat'] }}</td>
             @endforeach
         </tr>
         @endforeach

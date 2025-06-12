@@ -50,16 +50,12 @@ class AbsensiController extends Controller
                         'izin' => 0,
                         'sakit' => 0,
                         'alfa' => 0,
-                        'terlambat' => 0, // Tambah field terlambat
                     ];
                 }
             }
             foreach ($absensi as $a) {
                 if (isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                     $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-                }
-                if (isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                    $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
                 }
             }
         }
@@ -73,16 +69,12 @@ class AbsensiController extends Controller
                         'izin' => 0,
                         'sakit' => 0,
                         'alfa' => 0,
-                        'terlambat' => 0, // Tambah field terlambat
                     ];
                 }
             }
             foreach ($absensi as $a) {
                 if (isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                     $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-                }
-                if (isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                    $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
                 }
             }
         }
@@ -144,7 +136,6 @@ class AbsensiController extends Controller
             'mahasantri_ids.*' => 'exists:mahasantri,id',
             'status' => 'required|array',
             'keterangan' => 'nullable|array',
-            'is_late' => 'array', // tambahkan validasi is_late
         ]);
         // Cek libur sebelum simpan
         $isLibur = \App\Models\LiburKegiatan::where('tanggal', $data['tanggal'])->where('kegiatan_id', $data['kegiatan_id'])->exists();
@@ -156,12 +147,13 @@ class AbsensiController extends Controller
                 'status' => $data['status'][$mahasantri_id] ?? 'hadir',
                 'keterangan' => $data['keterangan'][$mahasantri_id] ?? null,
                 'updated_by' => Auth::id(),
-                'is_late' => 0,
             ];
+            // Lateness logic for pengajian subuh
             $kegiatan = Kegiatan::find($data['kegiatan_id']);
-            // Admin manual lateness for pengajian
-            if ($kegiatan && $kegiatan->jenis == 'pengajian' && isset($data['is_late']) && isset($data['is_late'][$mahasantri_id])) {
-                $absensiData['is_late'] = 1;
+            if ($kegiatan && $kegiatan->jenis == 'pengajian') {
+                $now = Carbon::now()->format('H:i');
+                $absensiData['waktu_hadir'] = $now;
+                $absensiData['is_late'] = ($now > $kegiatan->waktu_mulai);
             }
             Absensi::updateOrCreate([
                 'mahasantri_id' => $mahasantri_id,
@@ -230,16 +222,12 @@ class AbsensiController extends Controller
                     'izin' => 0,
                     'sakit' => 0,
                     'alfa' => 0,
-                    'terlambat' => 0, // Tambah field terlambat
                 ];
             }
         }
         foreach ($absensi as $a) {
             if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                 $rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-            }
-            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                $rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
             }
         }
 

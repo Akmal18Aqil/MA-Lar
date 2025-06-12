@@ -50,16 +50,12 @@ class AbsensiController extends Controller
                         'izin' => 0,
                         'sakit' => 0,
                         'alfa' => 0,
-                        'terlambat' => 0, // Tambah field terlambat
                     ];
                 }
             }
             foreach ($absensi as $a) {
                 if (isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                     $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-                }
-                if (isset($rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                    $rekapBulanan[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
                 }
             }
         }
@@ -73,16 +69,12 @@ class AbsensiController extends Controller
                         'izin' => 0,
                         'sakit' => 0,
                         'alfa' => 0,
-                        'terlambat' => 0, // Tambah field terlambat
                     ];
                 }
             }
             foreach ($absensi as $a) {
                 if (isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                     $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-                }
-                if (isset($rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                    $rekapTahunan[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
                 }
             }
         }
@@ -230,16 +222,12 @@ class AbsensiController extends Controller
                     'izin' => 0,
                     'sakit' => 0,
                     'alfa' => 0,
-                    'terlambat' => 0, // Tambah field terlambat
                 ];
             }
         }
         foreach ($absensi as $a) {
             if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                 $rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-            }
-            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                $rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
             }
         }
 

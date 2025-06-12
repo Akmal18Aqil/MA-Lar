@@ -69,13 +69,13 @@
                 </div>
                 <div class="table-responsive px-2 px-md-4 pb-4">
                     @if($filter === 'bulanan' || $filter === 'tahunan')
-                        <table class="table table-bordered table-striped table-hover w-100 text-center align-middle" style="min-width:100%">
+                        <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%">
                             <thead class="thead-light">
                                 <tr>
                                     <th style="width:40px" rowspan="2">NIM</th>
                                     <th rowspan="2">Nama Mahasantri</th>
                                     @foreach($kegiatan as $k)
-                                        <th colspan="5" class="text-center align-middle">
+                                        <th colspan="4" class="text-center">
                                             {{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span>
                                             @if(is_array($liburKegiatan) && in_array($k->id, $liburKegiatan))
                                                 <span class="badge badge-danger ml-1">Libur</span>
@@ -89,7 +89,6 @@
                                         <th class="text-center">I</th>
                                         <th class="text-center">S</th>
                                         <th class="text-center">A</th>
-                                        <th class="text-center">T</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -97,27 +96,27 @@
                                 @foreach($mahasantris as $m)
                                 <tr>
                                     <td>{{ $m->nim }}</td>
-                                    <td class="text-left">{{ $m->nama_lengkap }}</td>
+                                    <td>{{ $m->nama_lengkap }}</td>
                                     @foreach($kegiatan as $k)
                                         @php
                                             $isLibur = is_array($liburKegiatan) && in_array($k->id, $liburKegiatan);
-                                            $rekap = ($filter === 'bulanan' ? ($rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0,'terlambat'=>0]) : ($rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0,'terlambat'=>0]));
+                                            $rekap = ($filter === 'bulanan' ? ($rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0]) : ($rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0]));
                                         @endphp
                                         @if($isLibur)
-                                            <td colspan="5" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
+                                            <td class="text-center"><span class="badge badge-danger">Libur</span></td>
+                                            <td class="text-center" colspan="3"><span class="text-muted">-</span></td>
                                         @else
-                                            <td>{{ $rekap['hadir'] }}</td>
-                                            <td>{{ $rekap['izin'] }}</td>
-                                            <td>{{ $rekap['sakit'] }}</td>
-                                            <td>{{ $rekap['alfa'] }}</td>
-                                            <td>{{ $rekap['terlambat'] }}</td>
+                                            <td class="text-center">{{ $rekap['hadir'] }}</td>
+                                            <td class="text-center">{{ $rekap['izin'] }}</td>
+                                            <td class="text-center">{{ $rekap['sakit'] }}</td>
+                                            <td class="text-center">{{ $rekap['alfa'] }}</td>
                                         @endif
                                     @endforeach
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        <table class="table table-bordered table-striped table-hover w-100 mt-0" style="min-width:100%; margin-top: -1px;">
+                        <table class="table table-bordered table-striped table-hover w-100" style="min-width:100%; margin-top: -1px;">
                             <tr>
                                 <td colspan="2" style="font-weight:bold; text-align:right;">Jumlah Libur</td>
                                 @foreach($kegiatan as $k)
@@ -127,7 +126,7 @@
                                             $liburCount = $liburKegiatanCount[$k->id];
                                         }
                                     @endphp
-                                    <td colspan="5" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
+                                    <td colspan="4" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
                                 @endforeach
                             </tr>
                         </table>

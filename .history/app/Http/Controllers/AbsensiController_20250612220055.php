@@ -230,16 +230,12 @@ class AbsensiController extends Controller
                     'izin' => 0,
                     'sakit' => 0,
                     'alfa' => 0,
-                    'terlambat' => 0, // Tambah field terlambat
                 ];
             }
         }
         foreach ($absensi as $a) {
             if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
                 $rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
-            }
-            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
-                $rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
             }
         }
 

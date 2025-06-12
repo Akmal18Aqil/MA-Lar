@@ -201,10 +201,7 @@ class AbsensiController extends Controller
         $filter = $request->input('filter', 'bulanan');
         $bulan = str_pad($request->input('bulan', now()->format('m')), 2, '0', STR_PAD_LEFT);
         $tahun = $request->input('tahun', now()->format('Y'));
-        $exportFields = $request->input('export_fields');
-        if (!$exportFields || !is_array($exportFields) || count($exportFields) === 0) {
-            $exportFields = ['hadir','izin','sakit','alfa','terlambat'];
-        }
+        $exportFields = $request->input('export_fields', ['hadir','izin','sakit','alfa','terlambat']);
 
         // Terapkan filter semester dan status_lulus
         $mahasantris = Mahasantri::with('user')
@@ -229,21 +226,21 @@ class AbsensiController extends Controller
         $rekap = [];
         foreach ($mahasantris as $m) {
             foreach ($kegiatan as $k) {
-                $rekap[$m->id][$k->id] = [];
-                foreach (['hadir','izin','sakit','alfa','terlambat'] as $field) {
-                    if (in_array($field, $exportFields)) {
-                        $rekap[$m->id][$k->id][$field] = 0;
-                    }
-                }
+                $rekap[$m->id][$k->id] = [
+                    'hadir' => 0,
+                    'izin' => 0,
+                    'sakit' => 0,
+                    'alfa' => 0,
+                    'terlambat' => 0,
+                ];
             }
         }
         foreach ($absensi as $a) {
-            foreach ($exportFields as $field) {
-                if ($field === 'terlambat' && isset($rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']) && $a->is_late) {
-                    $rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
-                } elseif ($field !== 'terlambat' && isset($rekap[$a->mahasantri_id][$a->kegiatan_id][$field]) && $a->status === $field) {
-                    $rekap[$a->mahasantri_id][$a->kegiatan_id][$field]++;
-                }
+            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status])) {
+                $rekap[$a->mahasantri_id][$a->kegiatan_id][$a->status]++;
+            }
+            if (isset($rekap[$a->mahasantri_id][$a->kegiatan_id]) && $a->is_late) {
+                $rekap[$a->mahasantri_id][$a->kegiatan_id]['terlambat']++;
             }
         }
         $fileName = 'Rekap_Absensi_' . $filter . '_' . ($filter === 'bulanan' ? $bulan . '_' : '') . $tahun . '.xlsx';

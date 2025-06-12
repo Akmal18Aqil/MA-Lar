@@ -57,9 +57,9 @@
             <td colspan="2" style="font-weight:bold; text-align:right;">Jumlah Libur</td>
             @foreach($kegiatan as $k)
                 @php
-                    $liburCount = isset($liburKegiatan) ? (method_exists($liburKegiatan, 'where') ? $liburKegiatan->where('kegiatan_id', $k->id)->count() : 0) : 0;
+                    $liburCount = isset($liburKegiatan) ? $liburKegiatan->where('kegiatan_id', $k->id)->count() : 0;
                 @endphp
-                <td colspan="{{ count($exportFields) }}" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
+                <td colspan="5" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
             @endforeach
         </tr>
         @endif

@@ -33,21 +33,19 @@
                                 <option value="lulus" {{ request('status_lulus') == 'lulus' ? 'selected' : '' }}>Lulus</option>
                             </select>
                         </div>
-                        @if(request()->has('filter') || request()->has('export_fields'))
                         <div class="form-group mb-2 mr-2 flex-grow-1">
                             <label for="export_fields" class="mb-0 d-block">Kolom Export</label>
                             <div class="input-group">
                                 <select name="export_fields[]" id="export_fields" class="form-control form-control-sm" multiple style="min-height:110px">
-                                    <option value="hadir" {{ in_array('hadir', (array)request('export_fields', [])) ? 'selected' : '' }}>Hadir</option>
-                                    <option value="izin" {{ in_array('izin', (array)request('export_fields', [])) ? 'selected' : '' }}>Izin</option>
-                                    <option value="sakit" {{ in_array('sakit', (array)request('export_fields', [])) ? 'selected' : '' }}>Sakit</option>
-                                    <option value="alfa" {{ in_array('alfa', (array)request('export_fields', [])) ? 'selected' : '' }}>Alfa</option>
-                                    <option value="terlambat" {{ in_array('terlambat', (array)request('export_fields', [])) ? 'selected' : '' }}>Terlambat</option>
+                                    <option value="hadir" {{ in_array('hadir', (array)request('export_fields', ['hadir','izin','sakit','alfa','terlambat'])) ? 'selected' : '' }}>Hadir</option>
+                                    <option value="izin" {{ in_array('izin', (array)request('export_fields', ['hadir','izin','sakit','alfa','terlambat'])) ? 'selected' : '' }}>Izin</option>
+                                    <option value="sakit" {{ in_array('sakit', (array)request('export_fields', ['hadir','izin','sakit','alfa','terlambat'])) ? 'selected' : '' }}>Sakit</option>
+                                    <option value="alfa" {{ in_array('alfa', (array)request('export_fields', ['hadir','izin','sakit','alfa','terlambat'])) ? 'selected' : '' }}>Alfa</option>
+                                    <option value="terlambat" {{ in_array('terlambat', (array)request('export_fields', ['hadir','izin','sakit','alfa','terlambat'])) ? 'selected' : '' }}>Terlambat</option>
                                 </select>
                             </div>
                             <small class="text-muted d-block mt-1">Tekan <b>Ctrl</b> (atau <b>Cmd</b>) untuk memilih lebih dari satu kolom</small>
                         </div>
-                        @endif
                         <button type="submit" class="btn btn-primary mb-2 mr-2 flex-shrink-0"><i class="fa fa-filter"></i> Filter</button>
                         @if($filter === 'bulanan' || $filter === 'tahunan')
                         <a href="{{ route('admin.absensi.export', request()->all()) }}" class="btn btn-success mb-2 ml-2 flex-shrink-0">
@@ -84,16 +82,13 @@
                 </div>
                 <div class="table-responsive px-2 px-md-4 pb-4">
                     @if($filter === 'bulanan' || $filter === 'tahunan')
-                        @php
-                            $exportFields = request('export_fields', ['hadir','izin','sakit','alfa','terlambat']);
-                        @endphp
                         <table class="table table-bordered table-striped table-hover w-100 text-center align-middle" style="min-width:100%">
                             <thead class="thead-light">
                                 <tr>
                                     <th style="width:40px" rowspan="2">NIM</th>
                                     <th rowspan="2">Nama Mahasantri</th>
                                     @foreach($kegiatan as $k)
-                                        <th colspan="{{ count($exportFields) }}" class="text-center align-middle">
+                                        <th colspan="5" class="text-center align-middle">
                                             {{ $k->nama_kegiatan }}<br><span class="text-xs">({{ $k->jenis }})</span>
                                             @if(is_array($liburKegiatan) && in_array($k->id, $liburKegiatan))
                                                 <span class="badge badge-danger ml-1">Libur</span>
@@ -103,9 +98,11 @@
                                 </tr>
                                 <tr>
                                     @foreach($kegiatan as $k)
-                                        @foreach($exportFields as $field)
-                                            <th class="text-center">{{ strtoupper(substr($field,0,1)) }}</th>
-                                        @endforeach
+                                        <th class="text-center">H</th>
+                                        <th class="text-center">I</th>
+                                        <th class="text-center">S</th>
+                                        <th class="text-center">A</th>
+                                        <th class="text-center">T</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -120,11 +117,13 @@
                                             $rekap = ($filter === 'bulanan' ? ($rekapBulanan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0,'terlambat'=>0]) : ($rekapTahunan[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0,'terlambat'=>0]));
                                         @endphp
                                         @if($isLibur)
-                                            <td colspan="{{ count($exportFields) }}" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
+                                            <td colspan="5" class="text-center align-middle"><span class="badge badge-danger">Libur</span></td>
                                         @else
-                                            @foreach($exportFields as $field)
-                                                <td>{{ $rekap[$field] ?? 0 }}</td>
-                                            @endforeach
+                                            <td>{{ $rekap['hadir'] }}</td>
+                                            <td>{{ $rekap['izin'] }}</td>
+                                            <td>{{ $rekap['sakit'] }}</td>
+                                            <td>{{ $rekap['alfa'] }}</td>
+                                            <td>{{ $rekap['terlambat'] }}</td>
                                         @endif
                                     @endforeach
                                 </tr>
@@ -141,7 +140,7 @@
                                             $liburCount = $liburKegiatanCount[$k->id];
                                         }
                                     @endphp
-                                    <td colspan="{{ count($exportFields) }}" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
+                                    <td colspan="5" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
                                 @endforeach
                             </tr>
                         </table>

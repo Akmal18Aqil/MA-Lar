@@ -45,6 +45,12 @@
             @foreach($kegiatan as $k)
                 @php
                     $r = $rekap[$m->id][$k->id] ?? ['hadir'=>0,'izin'=>0,'sakit'=>0,'alfa'=>0,'terlambat'=>0];
+                    $liburCount = 0;
+                    if ($filter === 'harian' && isset($liburKegiatan) && is_array($liburKegiatan) && in_array($k->id, $liburKegiatan)) {
+                        $liburCount = 1;
+                    } elseif (($filter === 'bulanan' || $filter === 'tahunan') && isset($liburKegiatan) && $liburKegiatan->where('kegiatan_id', $k->id)->count() > 0) {
+                        $liburCount = $liburKegiatan->where('kegiatan_id', $k->id)->count();
+                    }
                 @endphp
                 @foreach($exportFields as $field)
                     <td>{{ $r[$field] ?? 0 }}</td>
@@ -57,9 +63,9 @@
             <td colspan="2" style="font-weight:bold; text-align:right;">Jumlah Libur</td>
             @foreach($kegiatan as $k)
                 @php
-                    $liburCount = isset($liburKegiatan) ? (method_exists($liburKegiatan, 'where') ? $liburKegiatan->where('kegiatan_id', $k->id)->count() : 0) : 0;
+                    $liburCount = isset($liburKegiatan) ? $liburKegiatan->where('kegiatan_id', $k->id)->count() : 0;
                 @endphp
-                <td colspan="{{ count($exportFields) }}" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
+                <td colspan="5" style="text-align:center; color:red; font-weight:bold;">{{ $liburCount > 0 ? $liburCount . 'x Libur' : '' }}</td>
             @endforeach
         </tr>
         @endif

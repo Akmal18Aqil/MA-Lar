@@ -16,8 +16,8 @@
                 @endif
                 <form method="GET" action="" class="d-flex flex-wrap align-items-center gap-2 px-4 pb-2" style="gap: 12px !important;">
                     <input type="text" name="semester" class="form-control form-control-sm mr-2 mb-2" placeholder="Semester" value="{{ request('semester') }}" style="max-width:120px;">
-                    <input type="number" name="bulan" min="1" max="12" class="form-control form-control-sm mr-2 mb-2" placeholder="Bulan (1-12)" value="{{ request('bulan', now()->format('m')) }}" style="max-width:120px;">
-                    <input type="number" name="tahun" min="2020" class="form-control form-control-sm mr-2 mb-2" placeholder="Tahun" value="{{ request('tahun', now()->format('Y')) }}" style="max-width:120px;">
+                    <input type="number" name="bulan" min="1" max="12" class="form-control form-control-sm mr-2 mb-2" placeholder="Bulan (1-12)" value="{{ request('bulan') }}" style="max-width:120px;">
+                    <input type="number" name="tahun" min="2020" class="form-control form-control-sm mr-2 mb-2" placeholder="Tahun" value="{{ request('tahun') }}" style="max-width:120px;">
                     <button type="submit" class="btn btn-primary btn-sm mb-2" style="margin-right:8px;"><i class="fa fa-filter"></i> Filter</button>
                     <a href="{{ route('admin.ukt.export', array_filter(['semester' => request('semester'), 'bulan' => request('bulan'), 'tahun' => request('tahun')])) }}" class="btn btn-success btn-sm mb-2 {{ !request('semester') && !request('bulan') && !request('tahun') ? 'disabled' : '' }}" @if(!request('semester') && !request('bulan') && !request('tahun')) onclick="return false;" @endif style="margin-right:8px;">
                         <i class="fas fa-file-excel"></i> Export Rekap UKT
@@ -25,8 +25,8 @@
                 </form>
                 <div class="px-4 pb-2">
                     @php
-                        $bulanFilter = request('bulan', now()->format('m'));
-                        $tahunFilter = request('tahun', now()->format('Y'));
+                        $bulanFilter = request('bulan') ? request('bulan') : now()->format('m');
+                        $tahunFilter = request('tahun') ? request('tahun') : now()->format('Y');
                         $namaBulan = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
                         $teksBulan = $namaBulan[(int)$bulanFilter] ?? $bulanFilter;
                     @endphp
@@ -50,8 +50,8 @@
                         <tbody>
                             @php
                                 $semesterFilter = request('semester');
-                                $bulanFilter = request('bulan', now()->format('m'));
-                                $tahunFilter = request('tahun', now()->format('Y'));
+                                $bulanFilter = request('bulan');
+                                $tahunFilter = request('tahun');
                                 $allMahasantri = \App\Models\Mahasantri::with(['uktPayments' => function($q) use ($semesterFilter, $bulanFilter, $tahunFilter) {
                                     if ($semesterFilter) {
                                         $q->where('periode', $semesterFilter);

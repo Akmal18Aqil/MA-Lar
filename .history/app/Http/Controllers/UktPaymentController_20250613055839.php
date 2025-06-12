@@ -7,7 +7,6 @@ use App\Models\UktPayment;
 use App\Models\Mahasantri;
 use App\Exports\RekapUktExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Auth;
 
 class UktPaymentController extends Controller
 {
@@ -42,7 +41,7 @@ class UktPaymentController extends Controller
                     'jumlah' => 350000, // per bulan 350rb, total 2.100.000 jika 6 bulan
                     'tanggal_bayar' => $bulanBayar->format('Y-m-d'),
                     'status' => 'lunas',
-                    'updated_by' => \Illuminate\Support\Facades\Auth::id() ?? null,
+                    'updated_by' => auth()->id(),
                 ]);
             }
             return redirect()->route('admin.ukt.index')->with('success', 'Pembayaran UKT semester lunas untuk 6 bulan!');
@@ -52,7 +51,7 @@ class UktPaymentController extends Controller
             'jumlah' => $validated['jumlah'],
             'tanggal_bayar' => $validated['tanggal_bayar'],
             'status' => $validated['status'],
-            'updated_by' => \Illuminate\Support\Facades\Auth::id() ?? null,
+            'updated_by' => auth()->id(),
         ]);
         return redirect()->route('admin.ukt.index')->with('success', 'Pembayaran UKT berhasil ditambahkan!');
     }
@@ -76,7 +75,7 @@ class UktPaymentController extends Controller
             'jumlah' => $validated['jumlah'],
             'tanggal_bayar' => $validated['tanggal_bayar'],
             'status' => $validated['status'],
-            'updated_by' => \Illuminate\Support\Facades\Auth::id() ?? null,
+            'updated_by' => auth()->id(),
         ]);
         return redirect()->route('admin.ukt.index')->with('success', 'Pembayaran UKT berhasil diupdate!');
     }

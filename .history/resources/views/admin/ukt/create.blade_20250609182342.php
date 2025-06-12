@@ -32,7 +32,10 @@
                                 <label for="tanggal_bayar">Tanggal Bayar</label>
                                 <input type="date" name="tanggal_bayar" id="tanggal_bayar" class="form-control" required>
                             </div>
-                            
+                            <div class="form-group mb-3">
+                                <label for="periode">Periode</label>
+                                <input type="text" name="periode" id="periode" class="form-control" required placeholder="Contoh: 2025/2026 Ganjil atau Juni 2025">
+                            </div>
                             <div class="form-group mb-3">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control" required>

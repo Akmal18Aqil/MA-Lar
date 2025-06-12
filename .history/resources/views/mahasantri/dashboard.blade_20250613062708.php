@@ -42,6 +42,41 @@
                         </div>
                     </div>
                 </div>
+                <!-- Modal Ganti Password -->
+                <div class="modal fade" id="modalGantiPassword" tabindex="-1" role="dialog" aria-labelledby="modalGantiPasswordLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modalGantiPasswordLabel">Ganti Password</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="post" action="{{ route('password.update') }}">
+                          @csrf
+                          @method('put')
+                          <div class="form-group">
+                            <label for="current_password">Password Lama</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" required autocomplete="current-password">
+                          </div>
+                          <div class="form-group">
+                            <label for="password">Password Baru</label>
+                            <input type="password" class="form-control" id="password" name="password" required autocomplete="new-password">
+                          </div>
+                          <div class="form-group">
+                            <label for="password_confirmation">Konfirmasi Password Baru</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required autocomplete="new-password">
+                          </div>
+                          <div class="text-right">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Modal Ganti Password -->
             </div>
             <!-- Data Terkait Mahasantri -->
             <div class="card shadow mb-4">
@@ -62,18 +97,7 @@
                                 <tr>
                                     <td>{{ $absen->tanggal->format('d-m-Y') }}</td>
                                     <td>{{ $absen->kegiatan->nama_kegiatan ?? '-' }}</td>
-                                    <td>
-                                        @php
-                                            $status = strtolower($absen->status);
-                                        @endphp
-                                        @if($status === 'hadir')
-                                            <span class="badge badge-success">Hadir</span>
-                                        @elseif($status === 'izin')
-                                            <span class="badge badge-warning text-white">Izin</span>
-                                        @else
-                                            <span class="badge badge-danger">{{ ucfirst($absen->status) }}</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ ucfirst($absen->status) }}</td>
                                     <td>{{ $absen->keterangan ?? '-' }}</td>
                                 </tr>
                                 @endforeach
@@ -99,18 +123,7 @@
                                 <tr>
                                     <td>{{ $ukt->tanggal_bayar ? $ukt->tanggal_bayar->format('d-m-Y') : '-' }}</td>
                                     <td>Rp {{ number_format($ukt->jumlah,0,',','.') }}</td>
-                                    <td>
-                                        @php
-                                            $status = strtolower($ukt->status);
-                                        @endphp
-                                        @if($status === 'lunas')
-                                            <span class="badge badge-success">Lunas</span>
-                                        @elseif($status === 'pending')
-                                            <span class="badge badge-warning text-white">Pending</span>
-                                        @else
-                                            <span class="badge badge-danger">{{ ucfirst($ukt->status) }}</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ ucfirst($ukt->status) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -146,39 +159,4 @@
             -->
         </div>
     </div>
-</div>
-<!-- Modal Ganti Password harus berada di luar .container/.row agar tidak terpengaruh overflow/z-index -->
-<div class="modal fade" id="modalGantiPassword" tabindex="-1" role="dialog" aria-labelledby="modalGantiPasswordLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalGantiPasswordLabel">Ganti Password</h5>
-        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="{{ route('password.update') }}">
-          @csrf
-          @method('put')
-          <div class="form-group">
-            <label for="current_password">Password Lama</label>
-            <input type="password" class="form-control" id="current_password" name="current_password" required autocomplete="current-password">
-          </div>
-          <div class="form-group">
-            <label for="password">Password Baru</label>
-            <input type="password" class="form-control" id="password" name="password" required autocomplete="new-password">
-          </div>
-          <div class="form-group">
-            <label for="password_confirmation">Konfirmasi Password Baru</label>
-            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required autocomplete="new-password">
-          </div>
-          <div class="text-right">
-            <button type="submit" class="btn btn-primary">Simpan</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 </x-app-layout>

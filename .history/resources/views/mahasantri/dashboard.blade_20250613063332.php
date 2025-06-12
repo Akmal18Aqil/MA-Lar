@@ -62,18 +62,7 @@
                                 <tr>
                                     <td>{{ $absen->tanggal->format('d-m-Y') }}</td>
                                     <td>{{ $absen->kegiatan->nama_kegiatan ?? '-' }}</td>
-                                    <td>
-                                        @php
-                                            $status = strtolower($absen->status);
-                                        @endphp
-                                        @if($status === 'hadir')
-                                            <span class="badge badge-success">Hadir</span>
-                                        @elseif($status === 'izin')
-                                            <span class="badge badge-warning text-white">Izin</span>
-                                        @else
-                                            <span class="badge badge-danger">{{ ucfirst($absen->status) }}</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ ucfirst($absen->status) }}</td>
                                     <td>{{ $absen->keterangan ?? '-' }}</td>
                                 </tr>
                                 @endforeach
@@ -99,18 +88,7 @@
                                 <tr>
                                     <td>{{ $ukt->tanggal_bayar ? $ukt->tanggal_bayar->format('d-m-Y') : '-' }}</td>
                                     <td>Rp {{ number_format($ukt->jumlah,0,',','.') }}</td>
-                                    <td>
-                                        @php
-                                            $status = strtolower($ukt->status);
-                                        @endphp
-                                        @if($status === 'lunas')
-                                            <span class="badge badge-success">Lunas</span>
-                                        @elseif($status === 'pending')
-                                            <span class="badge badge-warning text-white">Pending</span>
-                                        @else
-                                            <span class="badge badge-danger">{{ ucfirst($ukt->status) }}</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ ucfirst($ukt->status) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

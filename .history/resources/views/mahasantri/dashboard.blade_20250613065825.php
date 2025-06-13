@@ -68,13 +68,8 @@
                                         @endphp
                                         @if($status === 'hadir')
                                             <span class="badge badge-success">Hadir</span>
-                                            @if(isset($absen->kegiatan->jenis) && $absen->kegiatan->jenis === 'sholat_jamaah')
-                                                @if(!empty($absen->is_late))
-                                                    <span class="badge badge-warning ml-1">Terlambat Sholat</span>
-                                                @endif
-                                                @if(isset($absen->is_shaf_pertama) && ($absen->is_shaf_pertama == 1 || $absen->is_shaf_pertama === true || $absen->is_shaf_pertama === 'on'))
-                                                    <span class="badge badge-info ml-1" title="Tidak Shaf Pertama">T Shaf</span>
-                                                @endif
+                                            @if(isset($absen->kegiatan->jenis) && $absen->kegiatan->jenis === 'sholat_jamaah' && !empty($absen->is_late))
+                                                <span class="badge badge-warning ml-1">Terlambat Sholat</span>
                                             @endif
                                         @elseif($status === 'izin')
                                             <span class="badge badge-warning text-white">Izin</span>

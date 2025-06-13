@@ -35,9 +35,10 @@ Route::middleware(['auth', 'role:mahasantri'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:dosen'])->group(function () {
-    Route::get('/dosen/dashboard', function () {
-        return view('dosen.dashboard');
-    })->name('dosen.dashboard');
+    Route::get('/dosen/dashboard', [\App\Http\Controllers\DosenController::class, 'dashboard'])->name('dosen.dashboard');
+    Route::get('/dosen/detail', function () {
+        return view('dosen.detail');
+    })->name('dosen.detail');
     // Add dosen specific routes here
 });
 

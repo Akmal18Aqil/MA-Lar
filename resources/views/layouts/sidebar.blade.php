@@ -49,9 +49,10 @@
                 <li class="{{ Request::is('dosen/dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dosen.dashboard') }}" class="nav-link"><i class="fa fa-fire"></i><span>Dashboard</span></a>
                 </li>
-                <li class="menu-header">Kegiatan Mahasantri</li>
-                <li class="{{ Request::is('dosen/kegiatan') ? 'active' : '' }}">
-                    <a class="nav-link" href="#"><i class="fa fa-bar-chart"></i><span>Statistik Kegiatan</span></a>
+                
+                <li class="menu-header">Detail Data</li>
+                <li class="{{ Request::is('dosen/detail') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('dosen.detail') }}"><i class="fa fa-list-alt"></i><span>Detail Absen & UKT</span></a>
                 </li>
             @elseif($role === 'mahasantri')
                 <li class="menu-header">Dashboard</li>

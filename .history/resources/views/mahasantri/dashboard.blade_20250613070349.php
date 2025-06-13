@@ -48,43 +48,15 @@
                 <div class="card-header bg-primary text-white font-weight-bold d-flex justify-content-between align-items-center">
                     <span>Data Absensi</span>
                     <form method="GET" class="form-inline d-flex align-items-center" style="gap:8px;">
-                        <select name="filter" id="filter-select" class="form-control form-control-sm">
+                        <select name="filter" class="form-control form-control-sm">
                             <option value="harian" {{ request('filter', 'harian') == 'harian' ? 'selected' : '' }}>Harian</option>
                             <option value="bulanan" {{ request('filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
                         </select>
-                        <input type="date" name="tanggal" class="form-control form-control-sm" value="{{ request('tanggal', now()->format('Y-m-d')) }}" id="input-tanggal">
-                        <div id="bulan-tahun-group" style="display:{{ request('filter')=='bulanan'?'inline-flex':'none' }};gap:8px;align-items:center;">
-                            <label for="input-bulan" class="mb-0">Bulan</label>
-                            <input type="number" name="bulan" min="1" max="12" class="form-control form-control-sm" placeholder="Bulan" value="{{ request('bulan', now()->format('m')) }}" id="input-bulan" style="width:90px;">
-                            <label for="input-tahun" class="mb-0">Tahun</label>
-                            <input type="number" name="tahun" min="2020" class="form-control form-control-sm" placeholder="Tahun" value="{{ request('tahun', now()->format('Y')) }}" id="input-tahun" style="width:100px;">
-                        </div>
+                        <input type="date" name="tanggal" class="form-control form-control-sm" value="{{ request('tanggal', now()->format('Y-m-d')) }}">
+                        <input type="number" name="bulan" min="1" max="12" class="form-control form-control-sm" placeholder="Bulan" value="{{ request('bulan', now()->format('m')) }}" style="width:90px;display:{{ request('filter')=='bulanan'?'inline-block':'none' }};">
+                        <input type="number" name="tahun" min="2020" class="form-control form-control-sm" placeholder="Tahun" value="{{ request('tahun', now()->format('Y')) }}" style="width:100px;display:{{ request('filter')=='bulanan'?'inline-block':'none' }};">
                         <button type="submit" class="btn btn-sm btn-light border">Terapkan</button>
                     </form>
-                    <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var filterSelect = document.getElementById('filter-select');
-                        var bulanTahunGroup = document.getElementById('bulan-tahun-group');
-                        var inputTanggal = document.getElementById('input-tanggal');
-                        filterSelect.addEventListener('change', function() {
-                            if(this.value === 'bulanan') {
-                                bulanTahunGroup.style.display = 'inline-flex';
-                                inputTanggal.style.display = 'none';
-                            } else {
-                                bulanTahunGroup.style.display = 'none';
-                                inputTanggal.style.display = 'inline-block';
-                            }
-                        });
-                        // Inisialisasi tampilan saat reload
-                        if(filterSelect.value === 'bulanan') {
-                            bulanTahunGroup.style.display = 'inline-flex';
-                            inputTanggal.style.display = 'none';
-                        } else {
-                            bulanTahunGroup.style.display = 'none';
-                            inputTanggal.style.display = 'inline-block';
-                        }
-                    });
-                    </script>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -147,48 +119,7 @@
                 </div>
             </div>
             <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white font-weight-bold d-flex justify-content-between align-items-center">
-                    <span>Data Pembayaran UKT</span>
-                    <form method="GET" class="form-inline d-flex align-items-center" style="gap:8px;">
-                        <select name="ukt_filter" id="ukt-filter-select" class="form-control form-control-sm">
-                            <option value="harian" {{ request('ukt_filter', 'harian') == 'harian' ? 'selected' : '' }}>Harian</option>
-                            <option value="bulanan" {{ request('ukt_filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
-                        </select>
-                        <input type="date" name="ukt_tanggal" class="form-control form-control-sm" value="{{ request('ukt_tanggal', now()->format('Y-m-d')) }}" id="ukt-input-tanggal">
-                        <div id="ukt-bulan-tahun-group" style="display:{{ request('ukt_filter')=='bulanan'?'inline-flex':'none' }};gap:8px;align-items:center;">
-                            <label for="ukt-input-bulan" class="mb-0">Bulan</label>
-                            <input type="number" name="ukt_bulan" min="1" max="12" class="form-control form-control-sm" placeholder="Bulan" value="{{ request('ukt_bulan', now()->format('m')) }}" id="ukt-input-bulan" style="width:90px;">
-                            <label for="ukt-input-tahun" class="mb-0">Tahun</label>
-                            <input type="number" name="ukt_tahun" min="2020" class="form-control form-control-sm" placeholder="Tahun" value="{{ request('ukt_tahun', now()->format('Y')) }}" id="ukt-input-tahun" style="width:100px;">
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-light border">Terapkan</button>
-                    </form>
-                    <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // UKT filter toggle
-                        var uktFilterSelect = document.getElementById('ukt-filter-select');
-                        var uktBulanTahunGroup = document.getElementById('ukt-bulan-tahun-group');
-                        var uktInputTanggal = document.getElementById('ukt-input-tanggal');
-                        uktFilterSelect.addEventListener('change', function() {
-                            if(this.value === 'bulanan') {
-                                uktBulanTahunGroup.style.display = 'inline-flex';
-                                uktInputTanggal.style.display = 'none';
-                            } else {
-                                uktBulanTahunGroup.style.display = 'none';
-                                uktInputTanggal.style.display = 'inline-block';
-                            }
-                        });
-                        // Inisialisasi tampilan saat reload
-                        if(uktFilterSelect.value === 'bulanan') {
-                            uktBulanTahunGroup.style.display = 'inline-flex';
-                            uktInputTanggal.style.display = 'none';
-                        } else {
-                            uktBulanTahunGroup.style.display = 'none';
-                            uktInputTanggal.style.display = 'inline-block';
-                        }
-                    });
-                    </script>
-                </div>
+                <div class="card-header bg-primary text-white font-weight-bold">Data Pembayaran UKT</div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover mb-0">
@@ -200,23 +131,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $uktPayments = Auth::user()->mahasantri->uktPayments;
-                                    $uktFilter = request('ukt_filter', 'harian');
-                                    if($uktFilter === 'bulanan') {
-                                        $uktBulan = request('ukt_bulan', now()->format('m'));
-                                        $uktTahun = request('ukt_tahun', now()->format('Y'));
-                                        $uktPayments = $uktPayments->filter(function($u) use ($uktBulan, $uktTahun) {
-                                            return $u->tanggal_bayar && $u->tanggal_bayar->format('m') == $uktBulan && $u->tanggal_bayar->format('Y') == $uktTahun;
-                                        });
-                                    } else {
-                                        $uktTanggal = request('ukt_tanggal', now()->format('Y-m-d'));
-                                        $uktPayments = $uktPayments->filter(function($u) use ($uktTanggal) {
-                                            return $u->tanggal_bayar && $u->tanggal_bayar->format('Y-m-d') == $uktTanggal;
-                                        });
-                                    }
-                                @endphp
-                                @foreach($uktPayments->sortByDesc('tanggal_bayar')->take(10) as $ukt)
+                                @foreach(Auth::user()->mahasantri->uktPayments->sortByDesc('tanggal_bayar')->take(10) as $ukt)
                                 <tr>
                                     <td>{{ $ukt->tanggal_bayar ? $ukt->tanggal_bayar->format('d-m-Y') : '-' }}</td>
                                     <td>Rp {{ number_format($ukt->jumlah,0,',','.') }}</td>

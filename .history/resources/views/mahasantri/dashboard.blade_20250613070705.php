@@ -165,26 +165,25 @@
                     </form>
                     <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        // UKT filter toggle
-                        var uktFilterSelect = document.getElementById('ukt-filter-select');
-                        var uktBulanTahunGroup = document.getElementById('ukt-bulan-tahun-group');
-                        var uktInputTanggal = document.getElementById('ukt-input-tanggal');
-                        uktFilterSelect.addEventListener('change', function() {
+                        var filterSelect = document.getElementById('ukt-filter-select');
+                        var bulanTahunGroup = document.getElementById('ukt-bulan-tahun-group');
+                        var inputTanggal = document.getElementById('ukt-input-tanggal');
+                        filterSelect.addEventListener('change', function() {
                             if(this.value === 'bulanan') {
-                                uktBulanTahunGroup.style.display = 'inline-flex';
-                                uktInputTanggal.style.display = 'none';
+                                bulanTahunGroup.style.display = 'inline-flex';
+                                inputTanggal.style.display = 'none';
                             } else {
-                                uktBulanTahunGroup.style.display = 'none';
-                                uktInputTanggal.style.display = 'inline-block';
+                                bulanTahunGroup.style.display = 'none';
+                                inputTanggal.style.display = 'inline-block';
                             }
                         });
                         // Inisialisasi tampilan saat reload
-                        if(uktFilterSelect.value === 'bulanan') {
-                            uktBulanTahunGroup.style.display = 'inline-flex';
-                            uktInputTanggal.style.display = 'none';
+                        if(filterSelect.value === 'bulanan') {
+                            bulanTahunGroup.style.display = 'inline-flex';
+                            inputTanggal.style.display = 'none';
                         } else {
-                            uktBulanTahunGroup.style.display = 'none';
-                            uktInputTanggal.style.display = 'inline-block';
+                            bulanTahunGroup.style.display = 'none';
+                            inputTanggal.style.display = 'inline-block';
                         }
                     });
                     </script>
@@ -204,15 +203,15 @@
                                     $uktPayments = Auth::user()->mahasantri->uktPayments;
                                     $uktFilter = request('ukt_filter', 'harian');
                                     if($uktFilter === 'bulanan') {
-                                        $uktBulan = request('ukt_bulan', now()->format('m'));
-                                        $uktTahun = request('ukt_tahun', now()->format('Y'));
-                                        $uktPayments = $uktPayments->filter(function($u) use ($uktBulan, $uktTahun) {
-                                            return $u->tanggal_bayar && $u->tanggal_bayar->format('m') == $uktBulan && $u->tanggal_bayar->format('Y') == $uktTahun;
+                                        $bulan = request('ukt_bulan', now()->format('m'));
+                                        $tahun = request('ukt_tahun', now()->format('Y'));
+                                        $uktPayments = $uktPayments->filter(function($u) use ($bulan, $tahun) {
+                                            return $u->tanggal_bayar && $u->tanggal_bayar->format('m') == $bulan && $u->tanggal_bayar->format('Y') == $tahun;
                                         });
                                     } else {
-                                        $uktTanggal = request('ukt_tanggal', now()->format('Y-m-d'));
-                                        $uktPayments = $uktPayments->filter(function($u) use ($uktTanggal) {
-                                            return $u->tanggal_bayar && $u->tanggal_bayar->format('Y-m-d') == $uktTanggal;
+                                        $tanggal = request('ukt_tanggal', now()->format('Y-m-d'));
+                                        $uktPayments = $uktPayments->filter(function($u) use ($tanggal) {
+                                            return $u->tanggal_bayar && $u->tanggal_bayar->format('Y-m-d') == $tanggal;
                                         });
                                     }
                                 @endphp
